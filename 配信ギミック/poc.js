@@ -23,7 +23,7 @@ html,body{margin:0;height:100%;background:#111;overflow:hidden}
 @keyframes dr{to{transform:translateY(110px);opacity:0}}@keyframes ln{to{background-position:-300px 0}}
 </style>`);
 const s = document.createElement("div"); s.id = "s"; document.body.append(s);
-const fit = () => s.style.transform = `scale(${Math.min(innerWidth / 960, innerHeight / 540)})`;
+const fit = () => { const k = Math.min(innerWidth / 960, innerHeight / 540); s.style.transform = `translate(${(innerWidth - 960 * k) / 2}px,${(innerHeight - 540 * k) / 2}px) scale(${k})`; }; // 全画面でも中央に置く
 addEventListener("resize", fit); fit();
 
 const wait = ms => new Promise(r => setTimeout(r, ms));
