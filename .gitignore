@@ -1,0 +1,17 @@
+# 公開してよいファイルだけを許可する。ここにないものは GitHub に上がらない。
+*
+!.gitignore
+!.nojekyll
+!index.html
+!通常ハム.png
+!成金.png
+!成金2.png
+!配信ギミック/
+配信ギミック/*
+!配信ギミック/all.html
+!配信ギミック/poc.js
+!配信ギミック/poc2.js
+!配信ギミック/jackpot.mp4
+!配信ギミック/0*.html
+!配信ギミック/1*.html
+!配信ギミック/B*.html
