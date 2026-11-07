@@ -172,7 +172,7 @@ Object.assign(scenes, {
       await anim(cur, [{ transform: "none", opacity: 1 }, { transform: `translate(${ox - 480 / k}px,${oy - 270 / k}px) scale(${1 / k})`, opacity: 0, offset: .95 }, { opacity: 0 }], 1300, { easing: "ease-in-out" });
       cur.remove(); chip(t); await wait(650); };
     const g = gameBg(); pic(N, HX, HY, HW, "", g); await wait(1100); chip("カメラを引く");
-    const room = layer("background:linear-gradient(#c9b79c 0 70%,#7d6a55 70%)", `<div style="left:380px;top:190px;width:200px;height:112px;background:linear-gradient(#7fb4d8 0 62%,#5e6e52 62%);border:6px solid #222"></div><div style="left:450px;top:302px;width:60px;height:40px;background:#333"></div><div style="left:300px;top:340px;width:360px;height:20px;background:#6a4a30"></div><div style="left:110px;top:60px;width:170px;height:130px;background:#0b1530;border:8px solid #fff"></div>`);
+    const room = layer("background:linear-gradient(#c9b79c 0 70%,#7d6a55 70%)", `<div style="left:380px;top:190px;width:200px;height:112px;background:#171d2c url(ow_bg.png) center/cover;border:6px solid #222"></div><div style="left:450px;top:302px;width:60px;height:40px;background:#333"></div><div style="left:300px;top:340px;width:360px;height:20px;background:#6a4a30"></div><div style="left:110px;top:60px;width:170px;height:130px;background:#0b1530;border:8px solid #fff"></div>`);
     await zoom(g, room, 480, 246, 4.8, "部屋");
     const city = layer("background:linear-gradient(#0b1530,#27325c)", [[60, 260, 140], [220, 180, 170], [410, 220, 150], [580, 140, 160], [760, 240, 180]].map(([x, t, w]) => `<div style="left:${x}px;top:${t}px;width:${w}px;height:${540 - t}px;background:#10162e;border:2px solid #333b63"></div>`).join("") + `<div style="left:472px;top:290px;width:18px;height:18px;background:#ffe9a8;box-shadow:0 0 12px #ffe9a8"></div>`);
     await zoom(room, city, 481, 299, 4, "街");
@@ -304,7 +304,7 @@ Object.assign(scenes, {
 
   async droste() { // 入れ子配信
     const K = 3.2, X = 400, Y = 330, W = 960 / K, H = 540 / K;
-    const frame = d => `<div style="left:0;top:0;width:960px;height:540px;overflow:hidden;background:linear-gradient(#7fb4d8 0 62%,#5e6e52 62%)"><img src="${N}" style="left:${HX}px;top:${HY}px;width:${HW}px;height:${HH}px"><div style="left:20px;top:64px;padding:2px 12px;background:#e22;color:#fff;font-size:22px">LIVE</div><div style="left:${X - 14}px;top:${Y - 14}px;width:${W + 28}px;height:${H + 28}px;background:#222;border-radius:14px"></div>` +
+    const frame = d => `<div style="left:0;top:0;width:960px;height:540px;overflow:hidden;background:#171d2c url(ow_bg.png) center/cover"><img src="${N}" style="left:${HX}px;top:${HY}px;width:${HW}px;height:${HH}px"><div style="left:20px;top:64px;padding:2px 12px;background:#e22;color:#fff;font-size:22px">LIVE</div><div style="left:${X - 14}px;top:${Y - 14}px;width:${W + 28}px;height:${H + 28}px;background:#222;border-radius:14px"></div>` +
       (d ? `<div style="left:${X}px;top:${Y}px;width:${W}px;height:${H}px;overflow:hidden"><div style="left:0;top:0;transform:scale(${1 / K});transform-origin:0 0;width:960px;height:540px">${frame(d - 1)}</div></div>` : "") + `<div style="left:${X + W - 8}px;top:${Y + H / 2}px;width:40px;height:40px;border-radius:50%;background:#fbcbc3;border:4px solid ${INK}"></div></div>`;
     const w = layer("z-index:1", frame(5)); w.style.transformOrigin = `${X * K / (K - 1)}px ${Y * K / (K - 1)}px`;
     await wait(700); chip("ハムも配信開始"); bubble("見てるー?", 620, 240, 1100); await wait(1200); chip("画面の中へ");

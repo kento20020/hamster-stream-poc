@@ -5,7 +5,7 @@ const INK = "#331c16", HH = 230, HW = HH * 1237 / 1271, HX = 960 - 16 - HW, HY =
 document.head.insertAdjacentHTML("beforeend", `<style>
 html,body{margin:0;height:100%;background:#111;overflow:hidden}
 #s{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;color:#fff;
- background:radial-gradient(circle at 42% 38%,#44608a,#171d2c);font:900 28px "Yu Gothic",Meiryo,sans-serif}
+ background:#171d2c url(ow_bg.png) center/cover;font:900 28px "Yu Gothic",Meiryo,sans-serif}
 #s *{position:absolute;box-sizing:border-box}
 .t{white-space:nowrap;-webkit-text-stroke:7px #3a0a00;paint-order:stroke fill;text-shadow:0 3px 0 #0007}
 .chip{left:14px;top:14px;padding:7px 16px;background:#000b;border:2px solid #fff8;border-radius:20px;font-size:21px;z-index:50;white-space:nowrap}

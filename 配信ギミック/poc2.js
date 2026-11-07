@@ -16,14 +16,8 @@ const crumb = (x, y) => {
   anim(c, [{ transform: "none" }, { transform: `translate(${rnd(-60, 60)}px,${rnd(-70, -20)}px) rotate(200deg)`, offset: .4 },
     { transform: `translate(${rnd(-90, 90)}px,${rnd(60, 160)}px) rotate(500deg)`, opacity: 0 }], 550).then(() => c.remove());
 };
-// ゲーム画面の代わり (架空の FPS 画面)
-const gameBg = () => add(`<div><div style="left:0;top:0;width:100%;height:62%;background:linear-gradient(#7fb4d8,#d6e6ee)"></div>
-  <div style="left:0;top:62%;width:100%;height:38%;background:linear-gradient(#7a8a6a,#4c5a45)"></div>
-  <div style="left:120px;top:150px;width:170px;height:186px;background:#5d6b7c"></div>
-  <div style="left:560px;top:120px;width:230px;height:216px;background:#6f7d8d"></div>
-  <div style="left:472px;top:262px;width:16px;height:16px;border:3px solid #fff;border-radius:50%"></div>
-  <div style="left:24px;top:490px;width:220px;height:24px;background:#0006;border:2px solid #fff"><div style="left:0;top:0;width:18%;height:100%;background:#e55"></div></div>
-  <div class=t style="right:20px;top:14px;font-size:24px;color:#fff">デス 12</div></div>`, "left:0;top:0;width:960px;height:540px;z-index:1");
+// 動かせるゲーム画面 (投げ飛ばす、傾ける、縮めるなどに使う)
+const gameBg = () => add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:1;background:#171d2c url(ow_bg.png) center/cover");
 
 Object.assign(scenes, {
   async retire() { // 引退会見ハム
