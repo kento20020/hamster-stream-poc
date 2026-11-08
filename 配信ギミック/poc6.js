@@ -26,19 +26,14 @@ const seedBag = (x, y, w, o = {}) => { // 種の袋 (ハムの種)
 const sushi = (x, y, w, top, p, z = 6) => box(`left:${x}px;top:${y}px;width:${w}px;height:${w * .8}px;z-index:${z}`,
   `<svg viewBox="0 0 100 80" style="left:0;top:0;width:100%;height:100%;overflow:visible"><rect x=10 y=40 width=80 height=36 rx=16 fill=#fffdf5 stroke=${INK} stroke-width=4 /><path d="M4 44Q50 10 96 44Q96 54 50 54Q4 54 4 44Z" fill=${top} stroke=${INK} stroke-width=4 />
   <circle cx=36 cy=62 r=3.5 fill=${INK} /><circle cx=64 cy=62 r=3.5 fill=${INK} /><path d="M44 68Q50 72 56 68" fill=none stroke=${INK} stroke-width=3 stroke-linecap=round /></svg>`, p);
-const edo = () => room("background:#e8d8ae", `<div style="left:0;top:0;width:960px;height:300px;background:#e8d8ae"></div>
-  <div style="left:30px;top:50px;width:330px;height:245px;border:6px solid #6b4a2a;background:linear-gradient(90deg,#6b4a2a 3px,transparent 3px) 0 0/66px 100%,linear-gradient(#6b4a2a 3px,transparent 3px) 0 0/100% 61px,#fff8e6"></div>
-  <div style="left:0;top:300px;width:960px;height:240px;background:repeating-linear-gradient(90deg,transparent 0 318px,#6d7a3a 318px 322px),#a9b86c"></div><div style="left:0;top:292px;width:960px;height:14px;background:#6b4a2a"></div>`);
+const edo = () => room("", `<div style="left:150px;top:340px;width:810px;height:170px;background:repeating-linear-gradient(90deg,transparent 0 268px,#6d7a3a 268px 272px),#a9b86ccc;border:5px solid #6b4a2a;border-radius:10px"></div>`);
 const goze = (p, x, y, foods = ["🍚", "🍲", "🍵"], tag = "") => { const t = box(`left:${x}px;top:${y}px;width:150px;height:44px;background:#7a1f14;border:4px solid ${INK};border-radius:8px;z-index:5`, "", p);
   t.f = foods.map((f, i) => add(`<div>${f}</div>`, `left:${6 + i * 40}px;top:-36px;font-size:34px`, t)); if (tag) lb(tag, "left:0;top:46px;font-size:15px;background:#4a0f6a", t); return t; };
-const sushiShop = () => { const L = room("background:#f0e0c0", `<div style="left:0;top:0;width:960px;height:250px;background:linear-gradient(#f4e6c8,#e6cf9e)"></div>
-  <div style="left:0;top:306px;width:960px;height:234px;background:#b88a58;border-top:6px solid ${INK}"></div>`);
+const sushiShop = () => { const L = room("", `<div style="left:0;top:400px;width:960px;height:140px;background:#b88a58dd;border-top:6px solid ${INK}"></div>`);
   L.lane = box(`left:0;top:250px;width:960px;height:58px;background:repeating-linear-gradient(90deg,#9a7a5a 0 30px,#7a5a3a 30px 60px) 0 0/300px 100%;border-top:6px solid ${INK};animation:ln .9s linear infinite;z-index:2`, "", L); return L; };
 const platham = (x, y, p, dry = 0) => { const c = box(`left:${x}px;top:${y}px;width:130px;height:105px;z-index:7`, "", p);
   c.h = mh(N, 20, 0, 90, 2, c); box(`left:0;top:78px;width:130px;height:26px;background:#fff;border:4px solid ${INK};border-radius:50%;z-index:3`, "", c); return c; };
-const mart = (dim = 0) => room("background:#eef3f0", `<div style="left:0;top:0;width:960px;height:330px;background:linear-gradient(#f4f8f6,#dfe9e4)"></div>
-  <div style="left:0;top:330px;width:960px;height:210px;background:repeating-conic-gradient(#d8dde0 0 25%,#eef0f2 0 50%) 0 0/80px 80px"></div>
-  <div style="left:280px;top:14px;width:400px;height:50px;background:#c62828;border:4px solid ${INK};border-radius:8px;color:#fff;font-size:30px;text-align:center;line-height:42px;z-index:2">精肉・お惣菜コーナー</div>`);
+const mart = (dim = 0) => room("", `<div style="left:280px;top:14px;width:400px;height:50px;background:#c62828;border:4px solid ${INK};border-radius:8px;color:#fff;font-size:30px;text-align:center;line-height:42px;z-index:2">精肉・お惣菜コーナー</div>`);
 const sticker = (t, x, y, p, col = "#ffd23c", rot = 0) => box(`left:${x}px;top:${y}px;width:74px;height:74px;border-radius:50%;background:${col};border:4px solid #c62828;color:#c62828;font-size:${t.length > 3 ? 16 : 21}px;line-height:${t.length > 3 ? 20 : 66}px;text-align:center;rotate:${rot}deg;z-index:8;white-space:normal;padding:${t.length > 3 ? 16 : 0}px 4px 0`, t, p);
 const dim = (L, a) => box(`left:0;top:0;width:960px;height:540px;background:#000;opacity:0;z-index:12;pointer-events:none`, "", L);
 
@@ -95,7 +90,7 @@ Object.assign(scenes, {
 
   async i_T02_04() { // 天秤ナイフ
     ham(N); await wait(500); chip("ウルトでチーム全体を巻き込んでキル"); say("ウルト!!", 480, 230, { size: 60 }); burst(480, 284, 12); await wait(1000);
-    const L = room("background:linear-gradient(#ffe6ef,#fff6e6 62%,#e6cfae 62%)"); intro(L);
+    const L = room(""); intro(L);
     box("left:372px;top:300px;width:16px;height:190px;background:#8a6a4a;border:3px solid #331c16", "", L); box("left:310px;top:478px;width:140px;height:30px;background:#8a6a4a;border:4px solid #331c16;border-radius:14px", "", L);
     const B = box("left:100px;top:292px;width:560px;height:16px;background:#6b4a2a;border:3px solid #331c16;border-radius:8px;z-index:4;transform-origin:50% 50%", "", L);
     const pan = (cx, w) => { const c = box(`left:${cx - w / 2}px;top:0;width:${w}px;height:130px;transform-origin:${w / 2}px 8px`, "", B);
@@ -125,7 +120,7 @@ Object.assign(scenes, {
 
   async i_T02_08() { // イチゴ引換券の中身
     ham(N); await wait(500); chip("チャネポ「イチゴ引換券」を交換"); say("引換券!", 480, 230, { size: 56 }); await wait(1000);
-    const L = room("background:linear-gradient(#ffd9e4,#fff0f4)"); intro(L);
+    const L = room(""); intro(L);
     const hm = mh(R2, 560, 130, 300, 6, L); ov(hm, shades); const berry = ov(hm, berrySvg(620, 140, 1)); box("left:0;top:410px;width:960px;height:130px;background:#c28a52;border-top:6px solid #331c16;z-index:8", "", L);
     const zr = zari(60, 240, 170, { parent: L, face: "smile", z: 7 });
     const tk = box("left:240px;top:300px;width:170px;height:62px;background:#ffe28a;border:4px dashed #b8860b;color:#6a4a00;font-size:21px;text-align:center;line-height:54px;z-index:9;rotate:-6deg", "イチゴ引換券", L);
@@ -166,7 +161,7 @@ Object.assign(scenes, {
     const sign = box("left:820px;top:100px;width:100px;height:36px;background:#f0e0b0;border:4px solid #331c16;color:#222;font-size:18px;white-space:nowrap;text-align:center;line-height:28px;z-index:9", "まかない", L);
     const cust = [["#ff8a65", 40], ["#ffd54f", 220], ["#d32f2f", 400]].map(([c, x]) => sushi(x, 370, 110, c, L, 6));
     const pt = platham(560, 188, L); await wait(900);
-    const nor = box("left:0;top:-80px;width:960px;height:80px;z-index:25;background:repeating-linear-gradient(90deg,#c62828 0 238px,#7a1010 238px 242px);border-bottom:8px solid #331c16;color:#fff;font-size:44px;text-align:center;line-height:68px", "本日終了", L);
+    const nor = box("left:240px;top:-80px;width:480px;height:80px;z-index:25;background:repeating-linear-gradient(90deg,#c62828 0 238px,#7a1010 238px 242px);border-bottom:8px solid #331c16;color:#fff;font-size:44px;text-align:center;line-height:68px", "本日終了", L);
     await anim(nor, [{ transform: "none" }, { transform: "translateY(80px)" }], 600, { easing: "cubic-bezier(.3,1.5,.5,1)" }); L.lane.style.animationPlayState = "paused";
     cust.forEach((c, i) => anim(c, [{ transform: "none" }, { transform: "translateY(260px)" }], 600, { delay: i * 200, easing: "ease-in" })); bubble("ごちそうさま", 120, 330, 1000); await wait(1400);
     pt.style.transform = "none"; pt.style.left = "60px"; pt.style.top = "58px"; pt.style.zIndex = 6; CH.append(pt); pt.style.transformOrigin = "0 0"; pt.style.scale = ".8";
@@ -189,7 +184,7 @@ Object.assign(scenes, {
     const zs = [[620, 300], [700, 305], [780, 300]].map(([x, y], i) => zari(x + 150, y, 80, { parent: L, z: 7 + i, extra: `<path d="M2 120h30v8h-30z" fill=none />` })); const bk = zs.map((z, i) => add(`<div>🧺</div>`, "left:-6px;top:56px;font-size:32px", z));
     await wait(300); zs.forEach((z, i) => anim(z, [{ transform: "none" }, { transform: "translateX(-150px)" }], 700, { delay: i * 120 }));
     await wait(1100); chip("ウルトを発動してキル"); const fl = box("left:0;top:0;width:960px;height:540px;background:#fff;z-index:30", "", L); anim(fl, [{ opacity: 1 }, { opacity: 0 }], 500).then(() => fl.remove());
-    anim(dm, [{ opacity: 0 }, { opacity: .5 }], 300, {}); const sp = box("left:0;top:0;width:960px;height:540px;z-index:4;background:linear-gradient(#fff3a0,#fff3a000);clip-path:polygon(200px 0,400px 0,520px 480px,20px 480px);opacity:.75", "", L); anim(sp, [{ opacity: 0 }, { opacity: .75 }], 300);
+    anim(dm, [{ opacity: 0 }, { opacity: .35 }], 300, {}); const sp = box("left:0;top:0;width:960px;height:540px;z-index:4;background:linear-gradient(#fff3a0,#fff3a000);clip-path:polygon(200px 0,400px 0,520px 480px,20px 480px);opacity:.45", "", L); anim(sp, [{ opacity: 0 }, { opacity: .45 }], 300);
     stk.forEach((e, i) => anim(e, [{ transform: "none" }, { transform: `translate(${(i - 2.5) * 180}px,${-200 - i * 40}px) rotate(${rnd(300, 800)}deg)`, opacity: 0 }], 800, { easing: "ease-out" }));
     hm.style.filter = "drop-shadow(0 0 18px gold)"; hop(hm, 40);
     const tg = box("left:190px;top:330px;width:200px;height:120px;z-index:9;rotate:-5deg;background:#fff;border:5px solid #331c16;border-radius:12px;color:#c62828;text-align:center", "", L);
@@ -239,7 +234,7 @@ Object.assign(scenes, {
 
   async i_T05_04() { // ビッグサイズの罠
     ham(N); await wait(500); chip("ウルトを発動してキル"); say("ウルト!!", 480, 230, { size: 60 }); burst(480, 284, 12); await wait(1000);
-    const L = room("background:radial-gradient(#fff6d0,#f0d9a0)"); intro(L); const hm = mh(N, 770, 300, 170, 6, L); ov(hm, `<ellipse cx=250 cy=700 rx=110 ry=80 fill=#d9a99a opacity=.0 />`);
+    const L = room(""); intro(L); const hm = mh(N, 770, 300, 170, 6, L); ov(hm, `<ellipse cx=250 cy=700 rx=110 ry=80 fill=#d9a99a opacity=.0 />`);
     const bag = seedBag(380, 140, 200, { z: 8, p: L }); pop(bag, 250); const pr = box("left:520px;top:130px;width:80px;height:80px;border-radius:50%;background:#ffd23c;border:4px solid #c62828;color:#c62828;text-align:center;line-height:70px;font-size:26px;z-index:12", "¥300", L);
     await wait(1100); chip("ウルトを発動してキル"); const fl = box("left:0;top:0;width:960px;height:540px;background:#fff;z-index:30", "", L); anim(fl, [{ opacity: 1 }, { opacity: 0 }], 450).then(() => fl.remove());
     const star = box("left:250px;top:30px;width:460px;height:200px;background:#e53935;clip-path:polygon(50% 0,58% 20%,80% 8%,76% 30%,100% 36%,80% 52%,96% 74%,72% 70%,66% 100%,50% 82%,34% 100%,28% 70%,4% 74%,20% 52%,0 36%,24% 30%,20% 8%,42% 20%);z-index:14;color:#ffe066;font-size:50px;text-align:center;line-height:200px;-webkit-text-stroke:0", "ビッグサイズ!", L);
@@ -257,7 +252,7 @@ Object.assign(scenes, {
 
   async i_T05_07() { // プレミアム版の中身
     ham(N); await wait(500); chip("ビッツ500を投げ銭"); say("ビッツ500!", 480, 230, { size: 56 }); burst(480, 284, 12); await wait(1000);
-    const L = room("background:radial-gradient(#4a2a6a,#1c1030)"); intro(L); const hm = mh(N, 770, 300, 170, 6, L); const zr = zari(40, 300, 130, { parent: L, z: 6 });
+    const L = room("background:#1c103030"); intro(L); const hm = mh(N, 770, 300, 170, 6, L); const zr = zari(40, 300, 130, { parent: L, z: 6 });
     const old = seedBag(300, 130, 170, { z: 8, p: L }); const p1 = box("left:420px;top:130px;width:80px;height:36px;background:#fff8e6;border:4px solid #331c16;color:#222;font-size:24px;text-align:center;line-height:28px;z-index:12;rotate:8deg", "¥300", L);
     pop(old, 250); await wait(1200); const fl = box("left:0;top:0;width:960px;height:540px;background:#fff;z-index:30", "", L); anim(fl, [{ opacity: 1 }, { opacity: 0 }], 500).then(() => fl.remove());
     old.remove(); const gold = seedBag(290, 100, 200, { gold: 1, title: "PREMIUM", fs: 24, z: 8, p: L }); add(`<div>👑</div>`, "left:75px;top:-40px;font-size:50px", gold); pop(gold, 350);
@@ -686,8 +681,8 @@ const qRobo = (x, y, hh, z = 10) => {
 };
 const qTag = (t, css = "") => add(`<div>${t}</div>`, `color:#222;background:#fff8e6;border:3px solid ${INK};border-radius:6px;padding:2px 8px;font-size:17px;white-space:nowrap;z-index:22;${css}`);
 const qShopWall = (sign = "質屋") => {
-  const w = add(`<div></div>`, `left:330px;top:120px;width:630px;height:420px;background:repeating-linear-gradient(90deg,#6b4a2c 0 38px,#5d3f25 38px 42px);border-left:6px solid ${INK};border-top:6px solid ${INK};border-radius:18px 0 0 0;z-index:6`);
-  add(`<div>${sign}</div>`, `left:372px;top:132px;width:150px;height:46px;background:#b8322a;border:4px solid ${INK};border-radius:8px;font-size:32px;text-align:center;line-height:38px;z-index:7`);
+  const w = add(`<div></div>`, `left:540px;top:270px;width:420px;height:270px;background:repeating-linear-gradient(90deg,#6b4a2c 0 38px,#5d3f25 38px 42px);border-left:6px solid ${INK};border-top:6px solid ${INK};border-radius:18px 0 0 0;z-index:6`);
+  add(`<div>${sign}</div>`, `left:556px;top:282px;width:150px;height:46px;background:#b8322a;border:4px solid ${INK};border-radius:8px;font-size:32px;text-align:center;line-height:38px;z-index:7`);
   return w;
 };
 const qCounter = (x = 330, w = 380, y = 410) => add(`<div></div>`, `left:${x}px;top:${y}px;width:${w}px;height:${540 - y}px;background:${WOOD};border-top:8px solid #7a4a28;border-left:5px solid ${INK};z-index:12`);
@@ -772,22 +767,22 @@ Object.assign(scenes, {
   },
 
   async i_T11_01() { // 請け出し半額分
-    const h = ham(N); qShopWall(); qCounter(330, 380, 410);
+    const h = ham(N); qShopWall(); qCounter(330, 230, 440);
     const rope = add(`<div></div>`, "left:620px;top:156px;width:320px;height:4px;background:#e8d7a8;z-index:8");
     const tk = [0, 1, 2, 3].map(i => qTicket(650 + i * 68, 160));
-    [372, 438, 504].forEach((x, i) => { qOrb(x + 20, 204, 16, 8); qTag(["¥30", "¥12", "訳あり"][i], `left:${x - 2}px;top:222px;font-size:14px;z-index:8`); });
-    add(`<div></div>`, "left:350px;top:232px;width:230px;height:10px;background:#8a5a2e;border:3px solid " + INK + ";z-index:7");
-    const owner = zari(470, 306, 130, { face: "evil", acc: "glasses", z: 11 });
+    [556, 606, 656].forEach((x, i) => { qOrb(x + 14, 372, 15, 8); qTag(["¥30", "¥12", "訳あり"][i], `left:${x - 4}px;top:396px;font-size:12px;padding:1px 3px;z-index:8`); });
+    add(`<div></div>`, "left:550px;top:388px;width:160px;height:8px;background:#8a5a2e;border:3px solid " + INK + ";z-index:7");
+    const owner = zari(420, 330, 130, { face: "evil", acc: "glasses", z: 11 });
     await wait(900); chip("敵を1キルする");
     say("キル!", 540, 130, { size: 56, ms: 600 }); hop(h, 50);
     const t0 = tk[1]; t0.style.background = "#ffb0a0"; const fire = add(`<div>🔥</div>`, `left:${t0.offsetLeft - 8}px;top:${t0.offsetTop - 14}px;font-size:60px;z-index:16`);
     anim(fire, [{ transform: "scale(.4)" }, { transform: "scale(1.1)" }], 400); await wait(500); t0.remove(); fade(fire, 300);
     const [ox, oy] = P(600, 930); const orb = qOrb(ox, oy, 26, 13); await pop(orb, 300); swap(h, N, true);
     say("取り戻した!", 800, 270, { size: 40, color: "#7dff8a", ms: 900 }); await wait(1100);
-    const lp = add(`<svg viewBox="0 0 100 100"><circle cx=40 cy=40 r=32 fill=#cfeaffaa stroke=${INK} stroke-width=8 /><path d="M64 64L96 96" stroke=#7a4a28 stroke-width=14 stroke-linecap=round /></svg>`, `left:540px;top:380px;width:100px;height:100px;z-index:20`);
-    await anim(lp, [{ transform: "none" }, { transform: `translate(${ox - 580}px,${oy - 420}px) scale(1.5)` }], 600);
-    bubble("ふむ…", 560, 250, 900); await wait(900);
-    bubble("利子ぶんは引いときますね", 560, 262, 1800);
+    const lp = add(`<svg viewBox="0 0 100 100"><circle cx=40 cy=40 r=32 fill=#cfeaffaa stroke=${INK} stroke-width=8 /><path d="M64 64L96 96" stroke=#7a4a28 stroke-width=14 stroke-linecap=round /></svg>`, `left:500px;top:380px;width:100px;height:100px;z-index:20`);
+    await anim(lp, [{ transform: "none" }, { transform: `translate(${ox - 540}px,${oy - 420}px) scale(1.5)` }], 600);
+    bubble("ふむ…", 470, 285, 900); await wait(900);
+    bubble("利子ぶんは引いときますね", 470, 285, 1800);
     await wait(900);
     const sc = add(`<div>✂️</div>`, `left:${ox - 24}px;top:${oy - 30}px;font-size:50px;z-index:22`);
     await anim(sc, [{ transform: "scale(2)", opacity: 0 }, { transform: "scale(1)", opacity: 1 }], 200); anim(sc, [{ transform: "scaleX(1)" }, { transform: "scaleX(.5)" }, { transform: "scaleX(1)" }], 160, { iterations: 2 }); await wait(320);
@@ -795,17 +790,17 @@ Object.assign(scenes, {
     const half = qOrb(ox, oy, 26, 13); half.style.clipPath = "inset(0 50% 0 0)";
     const other = qOrb(ox, oy, 26, 21); other.style.clipPath = "inset(0 0 0 50%)";
     say("パキッ", ox - 30, oy - 70, { size: 34, ms: 500 });
-    anim(other, [{ transform: "none" }, { transform: "translate(-30px,-90px) rotate(-100deg)", offset: .5 }, { transform: `translate(${470 - ox + 30}px,${380 - oy}px) rotate(-200deg) scale(.7)` }], 900);
+    anim(other, [{ transform: "none" }, { transform: "translate(-30px,-90px) rotate(-100deg)", offset: .5 }, { transform: `translate(${470 - ox + 30}px,${400 - oy}px) rotate(-200deg) scale(.7)` }], 900);
     lp.remove();
-    await anim(h, [{ opacity: 1 }, { opacity: .38 }], 500); label("命 0.5個", `left:${HX - 80}px;top:${HY - 8}px;font-size:22px`);
+    await anim(h, [{ opacity: 1 }, { opacity: .38 }], 500); label("命 0.5個", `left:${HX + 60}px;top:${HY - 40}px;font-size:22px`);
     say("透けてる…", 800, 270, { size: 36, color: "#cfe0ff", ms: 1500 });
     await wait(2200);
   },
 
   async i_T11_03() { // 質札が首飾り
-    const h = ham(N); qShopWall(); qCounter(330, 380, 410);
-    add(`<div></div>`, "left:350px;top:262px;width:250px;height:10px;background:#8a5a2e;border:3px solid " + INK + ";z-index:7");
-    const owner = zari(560, 306, 130, { face: "smile", acc: "glasses", z: 11 });
+    const h = ham(N); qShopWall(); qCounter(330, 380, 440);
+    add(`<div></div>`, "left:350px;top:300px;width:210px;height:10px;background:#8a5a2e;border:3px solid " + INK + ";z-index:7");
+    const owner = zari(580, 340, 120, { face: "smile", acc: "glasses", z: 11 });
     const tks = [];
     for (let i = 0; i < 3; i++) {
       await wait(i ? 700 : 900); chip(`デス ×${i + 1}`); shake(h); const ey = ov(h, whiteEyes + openMouth); wait(500).then(() => ey.remove());
@@ -818,12 +813,12 @@ Object.assign(scenes, {
     await wait(1100); chip("デス ×4"); shake(h);
     const t4 = qTicket(HX + 140, HY + 60); t4.style.height = "42px"; await anim(t4, [{ transform: "translateY(-120px)", opacity: 0 }, { transform: "none", opacity: 1 }], 260);
     anim(owner, [{ transform: "none" }, { transform: "rotate(-14deg)" }], 400);
-    bubble("もう預かれるものが…", 560, 240, 1700); await wait(1900);
+    bubble("もう預かれるものが…", 560, 290, 1700); await wait(1900);
     anim(owner, [{ transform: "rotate(-14deg)" }, { transform: "none" }], 200);
     // 本体を棚へ
     h.append(...[]); tks.concat(t4).forEach(k => anim(k, [{ opacity: 1 }, { opacity: 0 }], 200));
-    await anim(h, [{ transform: "none" }, { transform: `translate(${430 - (HX + HW / 2)}px,${-266}px) scale(.38)` }], 700, { easing: "ease-in-out" });
-    h.style.zIndex = 8; const price = qTag("1円・訳あり", "left:400px;top:272px;font-size:17px;background:#fffb7a;color:#c22;rotate:-4deg"); pop(price);
+    await anim(h, [{ transform: "none" }, { transform: `translate(${440 - (HX + HW / 2)}px,${-236}px) scale(.38)` }], 700, { easing: "ease-in-out" });
+    h.style.zIndex = 8; const price = qTag("1円・訳あり", "left:400px;top:312px;font-size:17px;background:#fffb7a;color:#c22;rotate:-4deg"); pop(price);
     ov(h, closedEyes); await wait(500);
     const sh = add(`<img src="${N}">`, `left:${HX}px;top:${HY}px;width:${HW}px;height:${HH}px;filter:brightness(0);opacity:.78;z-index:10`);
     await anim(sh, [{ transform: "translateX(300px)" }, { transform: "none" }], 600);
@@ -1055,19 +1050,19 @@ Object.assign(scenes, {
   async i_T15_03() {
     const h = ham(N); ov(h, frown + tears);
     await wait(700); chip("3連続デス"); shake(h);
-    const w = q4Win(50, 70, 580, 390, "サブスク解約フォーム");
+    const w = q4Win(30, 60, 580, 390, "サブスク解約フォーム"); w.style.scale = ".68"; w.style.transformOrigin = "0 0";
     add(`<div class=q4st style="left:20px;top:46px;white-space:nowrap">解約理由（<span style="color:#d22">必須</span>・5000文字）</div>`, "", w);
     const ta = add(`<div style="left:20px;top:84px;width:530px;height:160px;background:#fff;border:3px solid #667;font-size:17px;line-height:22px;padding:6px;overflow:hidden;word-break:break-all;color:#111"></div>`, "", w);
     const cnt = add(`<div style="left:20px;top:252px;font-size:18px;color:#666">0 / 5000</div>`, "", w);
     const btn = add(`<div style="left:410px;top:290px;width:140px;height:46px;background:#aab;border:3px solid ${INK};border-radius:8px;text-align:center;line-height:40px;color:#fff">送信</div>`, "", w);
     await wait(500);
-    const cur = zari(330, 395, 64, { face: "angry", z: 40 }); anim(cur, [{ transform: "translateY(40px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
+    const cur = zari(200, 335, 60, { face: "angry", z: 40 }); anim(cur, [{ transform: "translateY(40px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
     await wait(500);
     const base = "高いです。やめたいです。高いです。", all = base.repeat(60);
     let n = 0;
     for (let i = 0; i < 28; i++) { n += 1; ta.textContent = all.slice(0, n); cnt.textContent = `${n} / 5000`; await wait(55); }
     while (n < 5000) { n = Math.min(5000, n + 330); ta.textContent = all.slice(0, Math.min(n, 320)); cnt.textContent = `${n} / 5000`; await wait(45); }
-    cnt.style.color = "#2a8a3a"; btn.style.background = "#2f6fe0"; await wait(400); await anim(cur, [{ transform: "none" }, { transform: "translate(190px,-8px)" }], 350); q4Ring(534, 387, 36);
+    cnt.style.color = "#2a8a3a"; btn.style.background = "#2f6fe0"; await wait(400); await anim(cur, [{ transform: "none" }, { transform: "translate(150px,-45px)" }], 350); q4Ring(362, 276, 28);
     btn.style.transform = "scale(.9)"; await wait(300);
     const page = (i, t, b) => { w.querySelectorAll(".pg").forEach(e => e.remove());
       [`<div class=pg style="left:20px;top:50px;width:540px;font-size:28px;text-align:center;line-height:1.3">${t}</div>`,
@@ -1077,12 +1072,12 @@ Object.assign(scenes, {
     [...w.children].slice(1).forEach(e => e.remove());
     page(1, "ご利用ありがとうございました<br>アンケートにご回答ください", "次のアンケートへ"); await wait(900);
     page(2, "あと少しです<br>もう少しだけお答えください", "その次のアンケートへ"); await wait(800);
-    for (let i = 3; i <= 10; i++) { page(i, `アンケート ${i}`, "その次のアンケートへ"); q4Ring(480, 70 + 315, 24, "#2f6fe0"); await wait(220); }
+    for (let i = 3; i <= 10; i++) { page(i, `アンケート ${i}`, "その次のアンケートへ"); q4Ring(30 + 300 * .68, 60 + 318 * .68, 20, "#2f6fe0"); await wait(220); }
     page(10, "ご協力ありがとうございました", "送信"); await wait(500);
     w.querySelectorAll(".pg").forEach(e => e.remove()); w.style.background = "#fff0f0"; w.firstChild.textContent = "エラー";
     add(`<div class=pg style="left:20px;top:100px;width:540px;font-size:42px;text-align:center;color:#d22">⚠ 入力内容が消えました</div>`, "", w);
     shake(w); cur.remove();
-    const sad = zari(520, 395, 70, { face: "sad", z: 40 });
+    const sad = zari(350, 330, 60, { face: "sad", z: 40 });
     await anim(sad, [{ transform: "none" }, { transform: "scale(.85,.55) translateY(20px)" }, { transform: "scale(.4,.3) translateY(60px)" }], 1400, { easing: "ease-in-out" });
     await wait(1200);
   },
@@ -1092,15 +1087,15 @@ Object.assign(scenes, {
     const h = ham(N); await wait(700); chip("チャネポで景品を交換");
     const sub = q4Sub(560, 50, 360, 160);
     const lbl = label("解約ボタン　幅 3px", "left:560px;top:216px;font-size:20px;z-index:21");
-    const list = q4Win(40, 70, 480, 340, "チャンネルポイント交換所");
+    const list = q4Win(30, 60, 480, 340, "チャンネルポイント交換所"); list.style.scale = ".48"; list.style.transformOrigin = "0 0";
     const items = [["ハムの自撮り", "500pt"], ["種 1粒", "100pt"], ["解約ボタンの大きさ +1px", "10,000pt"]];
     const rows = items.map(([a, b], i) => add(`<div style="left:12px;top:${50 + i * 62}px;width:450px;height:52px;border:3px solid #99a;border-radius:8px;background:#fff;font-size:20px;line-height:46px;padding:0 10px;white-space:nowrap">${a}<span style="position:static;float:right;color:#b60">${b}</span></div>`, "", list));
-    const pts = add(`<div class=t style="left:50px;top:420px;font-size:30px;color:#ffe066">所持 12,000pt</div>`);
+    const pts = add(`<div class=t style="left:30px;top:290px;font-size:26px;color:#ffe066">所持 12,000pt</div>`);
     await wait(900);
-    const z = zari(420, 400, 70, { face: "smile", z: 30 }); anim(z, [{ transform: "translateX(80px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
+    const z = zari(230, 340, 60, { face: "smile", z: 30 }); anim(z, [{ transform: "translateX(80px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
     await wait(500); rows[2].style.background = "#ffe9a0"; rows[2].style.borderColor = "#e90";
-    await wait(500); q4Ring(300, 70 + 4 + 50 + 124 + 26, 40); hop(z, 20);
-    pts.textContent = "所持 2,000pt"; say("-10,000pt", 340, 380, { size: 38, color: "#ff6a5a" }); await wait(700);
+    await wait(500); q4Ring(30 + 240 * .48, 60 + 206 * .48, 26); hop(z, 20);
+    pts.textContent = "所持 2,000pt"; say("-10,000pt", 240, 330, { size: 38, color: "#ff6a5a" }); await wait(700);
     // ボタンが1px大きくなる
     sub.cancel.style.width = "8px"; lbl.textContent = "解約ボタン　幅 4px"; say("+1px!!", 740, 240, { size: 50 }); flash(560, 900, 60, 200, "#ffe066"); await wait(900);
     // 虫眼鏡
@@ -1118,27 +1113,27 @@ Object.assign(scenes, {
   // ---- T15-10 解約はお電話で ----
   async i_T15_10() {
     const h = ham(N); await wait(600); chip("配信を終了する");
-    const sub = q4Sub(70, 110, 520, 260);
+    const sub = q4Sub(30, 90, 520, 260); sub.style.scale = ".6"; sub.style.transformOrigin = "0 0";
     sub.cancel.style.cssText += ";width:9px;height:6px";
-    const hint = add(`<div style="left:560px;top:340px;font-size:30px;color:#e22;z-index:30">↖</div>`);
+    const hint = add(`<div style="left:350px;top:238px;font-size:26px;color:#e22;z-index:30">↖</div>`);
     await wait(700);
-    const cur = zari(300, 400, 70, { face: "angry", z: 40 }); anim(cur, [{ transform: "translateY(50px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
+    const cur = zari(150, 330, 60, { face: "angry", z: 40 }); anim(cur, [{ transform: "translateY(50px)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
     await wait(500);
-    await anim(cur, [{ transform: "none" }, { transform: "translate(250px,-70px)" }], 600);
-    hint.remove(); q4Ring(578, 358, 26); await wait(350);
-    const dim = q4Dim(.55, 25); anim(dim, [{ opacity: 0 }, { opacity: 1 }], 200);
+    await anim(cur, [{ transform: "none" }, { transform: "translate(170px,-80px)" }], 600);
+    hint.remove(); q4Ring(338, 236, 22); await wait(350);
+    const dim = q4Dim(.35, 25); anim(dim, [{ opacity: 0 }, { opacity: 1 }], 200);
     const t = say("解約はお電話で", 400, 62, { size: 62, color: "#fff", ms: 0, z: 44 });
     cur.remove(); await wait(1000);
     // 頬袋
     anim(h, [{ transform: "none" }, { transform: "scale(1.18,1)" }], 260);
-    const pouch = add(`<div style="left:230px;top:190px;width:440px;height:270px;border-radius:50%;background:radial-gradient(#7a2a35,#3b1219);border:7px solid ${INK};z-index:46;overflow:hidden"></div>`);
+    const pouch = add(`<div style="scale:.62;left:330px;top:190px;width:440px;height:270px;border-radius:50%;background:radial-gradient(#7a2a35,#3b1219);border:7px solid ${INK};z-index:46;overflow:hidden"></div>`);
     anim(pouch, [{ transform: "scale(.1)", opacity: 0 }, { transform: "none", opacity: 1 }], 300);
-    add(`<div class=lab style="left:380px;top:160px;z-index:47">頬袋の中</div>`);
+    add(`<div class=lab style="left:500px;top:230px;z-index:47">頬袋の中</div>`);
     const ph = [];
     for (let r = 0; r < 3; r++) for (let c = 0; c < 5; c++) ph.push(q4Phone(60, `left:${34 + c * 76 + (r % 2) * 14}px;top:${26 + r * 78}px`)), pouch.append(ph[ph.length - 1]);
     await wait(500); chip("電話が一斉に鳴る");
     ph.forEach((p, i) => { p.classList.add("q4r"); p.style.animationDelay = -i * 17 + "ms"; });
-    const ringT = say("リリリリリン!!", 470, 480, { size: 54, color: "#ffe066", ms: 1600, z: 48 });
+    const ringT = say("リリリリリン!!", 540, 430, { size: 54, color: "#ffe066", ms: 1600, z: 48 });
     shake(h); await wait(1700);
     ph.forEach(p => p.classList.remove("q4r"));
     bubble("ただいま大変混み合っております", 450, 118, 0);
@@ -1177,16 +1172,16 @@ Object.assign(scenes, {
 
   // ---- T16-06 手術成功率100% ----
   async i_T16_06() {
-    const dim = q4Dim(.6, 2); await wait(300); chip("試合に敗北");
-    const lose = say("敗北", 480, 150, { size: 100, color: "#ff5a4a", ms: 0, z: 3 });
+    const dim = q4Dim(.3, 2); await wait(300); chip("試合に敗北");
+    const lose = say("敗北", 300, 110, { size: 80, color: "#ff5a4a", ms: 0, z: 3 });
     await wait(700);
-    const ban = add(`<div></div>`, `left:60px;top:200px;width:840px;height:110px;background:#fff;border:5px solid ${INK};z-index:12`);
+    const ban = add(`<div></div>`, `left:20px;top:190px;width:840px;height:110px;scale:.66;transform-origin:0 0;background:#fff;border:5px solid ${INK};z-index:12`);
     add(`<div style="left:0;right:0;top:12px;text-align:center;font-size:52px;color:#c11;white-space:nowrap">本日の手術成功率　100%</div>`, "", ban);
     add(`<div style="right:6px;bottom:3px;font-size:9px;color:#444;white-space:nowrap">※患者の生死は含みません</div>`, "", ban);
     add(`<div style="left:40px;top:-60px;width:6px;height:60px;background:#888"></div><div style="left:790px;top:-60px;width:6px;height:60px;background:#888"></div>`, "", ban);
     await anim(ban, [{ transform: "translateY(-300px)" }, { transform: "none" }], 450, { easing: "cubic-bezier(.3,1.4,.5,1)" });
-    const doc = q4Doc(110, 330, 130); hop(doc, 30);
-    bubble("ほら 100%", 180, 290, 0);
+    const doc = q4Doc(110, 330, 110); hop(doc, 30);
+    bubble("ほら 100%", 165, 290, 0);
     await wait(900);
     const h = ham(N); const bed = add(`<div></div>`, `left:${HX - 50}px;top:518px;width:330px;height:14px;background:#cde;border:4px solid ${INK};border-radius:6px;z-index:9`);
     add(`<div style="left:20px;top:10px;width:14px;height:14px;border-radius:50%;background:#333"></div><div style="left:290px;top:10px;width:14px;height:14px;border-radius:50%;background:#333"></div>`, "", bed);
@@ -1251,14 +1246,14 @@ Object.assign(scenes, {
     say("ストップ高!!", 480, 100, { size: 54, color: "#ff5a4a", ms: 1400, z: 40 }); burst(260, 60, 10);
     await wait(1600);
     // 天井へ
-    const dim = q4Dim(.65, 6); anim(dim, [{ opacity: 0 }, { opacity: 1 }], 300);
+    const dim = q4Dim(.28, 6); anim(dim, [{ opacity: 0 }, { opacity: 1 }], 300);
     const ceil = add(`<div></div>`, `left:0;top:0;width:960px;height:34px;background:#4a3a30;border-bottom:5px solid ${INK};z-index:9`);
     add(`<div class=lab style="left:380px;top:2px;font-size:18px">社長室</div>`, "", ceil);
     const cord = add(`<div style="left:${HX + HW / 2}px;top:34px;width:5px;height:0;background:#222;z-index:9"></div>`);
     anim(h, [{ transform: "none" }, { transform: `translateY(${-(HY - 70)}px)` }], 900, { easing: "ease-in-out" });
     await anim(cord, [{ height: "0px" }, { height: "40px" }], 900);
     h.style.filter = "brightness(1.6) drop-shadow(0 0 30px #fff)"; h.classList.add("bob");
-    const glow = add(`<div style="left:${HX - 200}px;top:0;width:${HW + 400}px;height:540px;background:radial-gradient(ellipse at 50% 12%,#ffffffaa,#0000 62%);z-index:7"></div>`);
+    const glow = add(`<div style="left:${HX - 200}px;top:0;width:${HW + 400}px;height:540px;background:radial-gradient(ellipse at 50% 12%,#ffffff66,#0000 62%);z-index:7"></div>`);
     const boss = zari(480, 380, 110, { acc: "crown", face: "smile", z: 12 });
     bubble("省エネだな", 540, 330, 0);
     chip("ハムが照明になった");
@@ -1379,7 +1374,7 @@ Object.assign(scenes, {
 // ---- q5 共通部品 (役所・バス・チャット) ----
 const q5Paper = (t, x, y, w = 130, h = 90, o = {}) => add(`<div>${t}</div>`,
   `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:#fffdf4;border:3px solid ${INK};color:#222;font-size:${o.size || 22}px;line-height:1.2;text-align:center;padding-top:${o.pt ?? 8}px;z-index:${o.z || 14};white-space:nowrap;${o.css || ""}`);
-const q5Room = (wall = "#e6dcc0") => layer(`z-index:2;background:linear-gradient(${wall} 0 66%,#a98657 66%)`,
+const q5Room = (wall = "#e6dcc0") => layer(`z-index:2;background:linear-gradient(transparent 0 66%,#a9865766 66%)`,
   `<div style="left:0;top:356px;width:960px;height:8px;background:#7a4a28"></div>`);
 const q5Win = (x, w, num, o = {}) => {
   const sign = add(`<div>${num}</div>`, `left:${x + w / 2}px;top:196px;translate:-50% 0;background:#1f6a4a;border:4px solid ${INK};padding:3px 18px;font-size:26px;white-space:nowrap;z-index:7`);
@@ -1391,9 +1386,9 @@ const q5End = async (ms = 450) => { // 役所などを片づけて元の OW 画�
   const els = [...s.children].filter(e => !e.classList.contains("chip") && e.style.zIndex !== "10");
   await Promise.all(els.map(e => fade(e, ms)));
 };
-const q5Bus = (speed = 520) => {
-  const wall = layer("z-index:2;background:linear-gradient(#cdb98c 0 62%,#4d5262 62%)");
-  const win = add(`<div></div>`, `left:40px;top:62px;width:880px;height:225px;overflow:hidden;border:8px solid ${INK};border-radius:18px;background:linear-gradient(#9fd8ff,#d6f1ff 70%);z-index:3`);
+const q5Bus = (speed = 520, small = false) => {
+  const wall = layer("z-index:2;background:linear-gradient(transparent 0 62%,#4d526240 62%)");
+  const win = add(`<div></div>`, `left:40px;top:62px;width:${small ? 380 : 520}px;height:${small ? 130 : 200}px;overflow:hidden;border:8px solid ${INK};border-radius:18px;background:linear-gradient(#9fd8ff,#d6f1ff 70%);z-index:3`);
   const strip = add(`<div></div>`, "left:0;top:0;width:1400px;height:100%", win);
   add(`<div></div>`, "left:0;bottom:0;width:100%;height:46px;background:#6b6b78", win);
   add(`<div></div>`, "left:0;bottom:46px;width:100%;height:12px;background:#9bb86a", win);
@@ -1404,7 +1399,7 @@ const q5Bus = (speed = 520) => {
     add(`<div></div>`, `left:${i * 200 + 130}px;bottom:50px;width:60px;height:34px;border-radius:30px 30px 0 0;background:#5e9a4a;border:3px solid ${INK}`, strip);
   }
   const run = strip.animate([{ transform: "none" }, { transform: "translateX(-200px)" }], { duration: speed, iterations: 60, easing: "linear" });
-  for (const x of [220, 400, 580]) add(`<div></div>`, `left:${x}px;top:292px;width:4px;height:26px;background:#222;z-index:4`), add(`<div></div>`, `left:${x - 12}px;top:316px;width:28px;height:28px;border-radius:50%;border:5px solid #e8c33a;z-index:4`);
+  for (const x of [220, 330, 440]) add(`<div></div>`, `left:${x}px;top:${small ? 200 : 270}px;width:4px;height:26px;background:#222;z-index:4`), add(`<div></div>`, `left:${x - 12}px;top:${small ? 224 : 294}px;width:28px;height:28px;border-radius:50%;border:5px solid #e8c33a;z-index:4`);
   const wheel = add(`<div></div>`, `left:90px;top:400px;width:84px;height:30px;border-radius:50%;border:8px solid #222;z-index:7`);
   const dr = zari(40, 322, 120, { acc: "helmet", face: "smile", z: 6 });
   return { wall, win, strip, run, dr, wheel };
@@ -1776,12 +1771,12 @@ Object.assign(scenes, {
     chip("バスが停車");
     bus.run.pause();
     const wn = bus.win;
-    const z = zari(560, 118, 80, { acc: "helmet", face: "angry", parent: wn, z: 6 });
+    const z = zari(330, 100, 80, { acc: "helmet", face: "angry", parent: wn, z: 6 });
     await wait(500);
-    const sg = add(`<div><div style="left:30px;top:30px;width:6px;height:96px;background:#555"></div><div style="left:0;top:0;width:66px;height:66px;border-radius:50%;background:#e44;border:4px solid ${INK};font-size:17px;text-align:center;padding-top:20px;white-space:nowrap;color:#fff;-webkit-text-stroke:3px ${INK};paint-order:stroke fill">ハム前</div></div>`, "left:470px;top:50px;width:70px;height:130px;z-index:5", wn);
+    const sg = add(`<div><div style="left:30px;top:30px;width:6px;height:96px;background:#555"></div><div style="left:0;top:0;width:66px;height:66px;border-radius:50%;background:#e44;border:4px solid ${INK};font-size:17px;text-align:center;padding-top:20px;white-space:nowrap;color:#fff;-webkit-text-stroke:3px ${INK};paint-order:stroke fill">ハム前</div></div>`, "left:250px;top:30px;width:70px;height:130px;z-index:5", wn);
     pop(sg, 300); say("ドン", 700, 160, { size: 36, color: "#fff", ms: 600 });
     await wait(700);
-    const bn = add(`<div><div style="left:0;top:0;width:100%;height:12px;background:#a06a38;border:3px solid ${INK}"></div><div style="left:8px;top:12px;width:8px;height:24px;background:#5a3a20"></div><div style="right:8px;top:12px;width:8px;height:24px;background:#5a3a20"></div></div>`, "left:640px;top:140px;width:110px;height:40px;z-index:5", wn);
+    const bn = add(`<div><div style="left:0;top:0;width:100%;height:12px;background:#a06a38;border:3px solid ${INK}"></div><div style="left:8px;top:12px;width:8px;height:24px;background:#5a3a20"></div><div style="right:8px;top:12px;width:8px;height:24px;background:#5a3a20"></div></div>`, "left:395px;top:122px;width:100px;height:40px;z-index:5", wn);
     pop(bn, 300); await wait(500);
     bubble("次は、ハム前。", 330, 322, 1700);
     const q = say("!?", 720, 250, { size: 80, color: "#ff5a4a", ms: 800 }); ov(h, whiteEyes);
@@ -1791,9 +1786,9 @@ Object.assign(scenes, {
 
   // ---------------- T26-08 片道の回数券 ----------------
   async i_T26_08() {
-    const h = ham(N), bus = q5Bus(900); anim(bus.wall, [{ opacity: 0 }, { opacity: 1 }], 300);
+    const h = ham(N), bus = q5Bus(900, true); anim(bus.wall, [{ opacity: 0 }, { opacity: 1 }], 300);
     await wait(700); chip("チャネポで「回数券」を交換");
-    const pst = note("10回乗ると<br>1回おまけ!", "left:480px;top:90px;font-size:44px;line-height:1.2;text-align:center;rotate:-3deg;z-index:30");
+    const pst = note("10回乗ると<br>1回おまけ!", "left:470px;top:60px;font-size:32px;line-height:1.2;text-align:center;rotate:-3deg;z-index:30");
     pop(pst, 300);
     const tks = []; for (let i = 0; i < 11; i++) {
       const t = add(`<div>${i + 1}</div>`, `left:${190 + i * 44}px;top:344px;width:42px;height:60px;background:${i === 10 ? "#ffe066" : "#fffdf4"};border:3px solid ${INK};color:#222;font-size:20px;text-align:center;padding-top:6px;z-index:20`);
@@ -1805,7 +1800,7 @@ Object.assign(scenes, {
     for (let i = 0; i < 10; i++) { cnt.textContent = `乗車 ${i + 1}回`; add(`<div></div>`, "left:11px;top:34px;width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid #c62828", tks[i]); anim(tks[i], [{ transform: "none" }, { transform: "translateY(-10px)" }, { transform: "none" }], 140); await wait(180); }
     await wait(300); say("おまけ!!", 500, 280, { size: 56 }); anim(tks[10], [{ transform: "none" }, { transform: "translateY(-30px) scale(1.2)" }, { transform: "none" }], 500, { iterations: 2 });
     await wait(1100); chip("最後の1枚をよく見る");
-    const big = note("あの世行き　<span style='position:static;color:#d3202a;font-size:78px'>片道</span><br style='position:static'><span style='position:static;font-size:22px'>※ご乗車1回限り</span>", "left:230px;top:196px;font-size:34px;text-align:center;line-height:1.3;padding:10px 24px;z-index:35");
+    const big = note("あの世行き　<span style='position:static;color:#d3202a;font-size:56px'>片道</span><br style='position:static'><span style='position:static;font-size:22px'>※ご乗車1回限り</span>", "left:300px;top:200px;font-size:26px;text-align:center;line-height:1.25;padding:6px 16px;z-index:35");
     anim(big, [{ transform: "translate(330px,150px) scale(.1)", opacity: 0 }, { transform: "none", opacity: 1 }], 400);
     ov(h, whiteEyes + openMouth); await wait(1200);
     say("片道…?", 800, 240, { size: 54, color: "#ff5a4a", ms: 1400 });
@@ -1848,16 +1843,15 @@ Object.assign(scenes, {
   async i_T26_10() {
     const h = ham(N);
     await wait(400); chip("配信を終了する");
-    const bus = layer("z-index:9;background:#0e1233;opacity:0");
-    add(`<div></div>`, `left:0;top:0;width:960px;height:56px;background:#2b3262;border-bottom:5px solid ${INK}`, bus);
-    for (let i = 0; i < 7; i++) add(`<div></div>`, `left:${180 + i * 120}px;top:60px;width:26px;height:36px;border:5px solid #e8e0c0;border-top:0;border-radius:0 0 14px 14px`, bus);
-    const win = add(`<div></div>`, `left:20px;top:100px;width:920px;height:150px;background:#1b2250;border:6px solid ${INK};overflow:hidden`, bus);
+    const bus = layer("z-index:9;background:#0e123340;opacity:0");
+    add(`<div></div>`, `left:0;top:0;width:960px;height:40px;background:#2b326260;border-bottom:5px solid ${INK}`, bus);
+    for (let i = 0; i < 7; i++) add(`<div></div>`, `left:${180 + i * 120}px;top:44px;width:26px;height:36px;border:5px solid #e8e0c0;border-top:0;border-radius:0 0 14px 14px`, bus);
+    const win = add(`<div></div>`, `left:20px;top:100px;width:920px;height:150px;background:#1b225033;border:6px solid ${INK};overflow:hidden`, bus);
     const lamps = [];
     for (let i = 0; i < 9; i++) { const l = add(`<div></div>`, `left:${i * 110 + 20}px;top:${30 + (i % 3) * 36}px;width:30px;height:30px;border-radius:50%;background:#ffd86b;box-shadow:0 0 18px #ffd86b`, win);
       lamps.push(l.animate([{ transform: "none" }, { transform: "translateX(-990px)" }], { duration: 1300, iterations: Infinity })); }
-    add(`<div></div>`, `left:0;top:250px;width:960px;height:290px;background:#2a1f33`, bus);
-    for (const x of [260, 420, 580]) add(`<div></div>`, `left:${x}px;top:280px;width:130px;height:140px;border-radius:30px 30px 8px 8px;background:#5b3f7a;border:5px solid ${INK}`, bus);
-    add(`<div></div>`, `left:690px;top:340px;width:290px;height:200px;border-radius:30px 0 0 0;background:#6d4c92;border:5px solid ${INK}`, bus);
+        for (const x of []) add(`<div></div>`, `left:${x}px;top:280px;width:130px;height:140px;border-radius:30px 30px 8px 8px;background:#5b3f7a66;border:5px solid #331c1688`, bus);
+    add(`<div></div>`, `left:690px;top:340px;width:290px;height:200px;border-radius:30px 0 0 0;background:#6d4c9266;border:5px solid #331c1688`, bus);
     const sign = add(`<div>終点 あの世</div>`, `left:360px;top:62px;padding:2px 18px;background:#111;border:3px solid #ffb000;color:#ffb000;font-size:26px;white-space:nowrap;z-index:3`, bus);
     const dr = zari(40, 240, 110, { face: "smile", z: 11, color: "#4aa3d8", dark: "#2d78a8" });
     const cap = add(`<svg viewBox="0 0 120 132" style="left:0;top:0;width:100%;height:100%;overflow:visible"><path d="M38 28Q60 2 82 28Z" fill=#1f3a7a stroke=${INK} stroke-width=3 /><rect x=34 y=26 width=54 height=7 rx=3 fill=#14275a stroke=${INK} stroke-width=3 /><circle cx=60 cy=19 r=3.5 fill=#ffd23c /></svg>`, "left:40px;top:240px;width:110px;height:121px;z-index:12");
@@ -1879,26 +1873,26 @@ Object.assign(scenes, {
     bubble("お疲れさまでした、また明日", 380, 188, 2200);
     await wait(1300);
     await walk(h, -500, -600, 300, 1); await fade(h, 300);
-    const tt = layer("z-index:40;background:linear-gradient(#141a3d,#3c3566 50%,#e59a5c 85%);opacity:0");
-    add(`<div></div>`, `left:0;top:480px;width:960px;height:60px;background:#1d1a2b`, tt);
-    add(`<div></div>`, `left:812px;top:170px;width:18px;height:320px;background:#8a8f9c;border:4px solid ${INK}`, tt);
-    add(`<div>ハム前</div>`, `left:735px;top:44px;width:170px;height:130px;border-radius:50%;background:#2a6fd0;border:7px solid #fff;outline:5px solid ${INK};color:#fff;font-size:42px;text-align:center;line-height:116px`, tt);
-    const bd = add(`<div></div>`, `left:70px;top:60px;width:560px;height:400px;background:#fffdf2;border:8px solid ${INK};z-index:2`, tt);
+    const tt = layer("z-index:40;background:linear-gradient(#141a3d50,#3c356630 50%,#e59a5c40 85%);opacity:0");
+    add(`<div></div>`, `left:0;top:500px;width:960px;height:40px;background:#1d1a2b80`, tt);
+    add(`<div></div>`, `left:850px;top:170px;width:14px;height:320px;background:#8a8f9c;border:4px solid ${INK}`, tt);
+    add(`<div>ハム前</div>`, `left:800px;top:44px;width:110px;height:84px;border-radius:50%;background:#2a6fd0;border:7px solid #fff;outline:5px solid ${INK};color:#fff;font-size:26px;text-align:center;line-height:68px`, tt);
+    const bd = add(`<div></div>`, `left:40px;top:70px;width:560px;height:400px;background:#fffdf2;border:8px solid ${INK};z-index:2;transform-origin:0 0;scale:.5`, tt);
     add(`<div>時刻表　ハム前 → あの世</div>`, `left:0;top:0;width:100%;height:58px;background:#1f8a4c;color:#fff;font-size:28px;text-align:center;line-height:58px`, bd);
     const rows = [["5:00", "運休"], ["5:30", "運休"], ["6:00", ""], ["6:30", "運休"]];
     rows.forEach(([t, d], i) => { add(`<div></div>`, `left:0;top:${72 + i * 80}px;width:100%;height:76px;border-bottom:3px dashed #bbb`, bd);
       add(`<div>${t}</div>`, `left:30px;top:${88 + i * 80}px;font-size:44px;color:#222;font-family:monospace`, bd);
       add(`<div>${d}</div>`, `left:210px;top:${96 + i * 80}px;font-size:32px;color:#999`, bd); });
     add(`<div>始発</div>`, `left:440px;top:${96 + 160}px;padding:0 10px;font-size:26px;color:#fff;background:#d3202a;border-radius:6px`, bd);
-    const mk = zari(640, 330, 110, { face: "smile", z: 45, color: "#4aa3d8", dark: "#2d78a8", extra: `<path d="M16 52L-6 14" stroke=${INK} stroke-width=11 stroke-linecap=round /><path d="M16 52L-6 14" stroke=#d3202a stroke-width=6 stroke-linecap=round />` });
+    const mk = zari(330, 340, 90, { face: "smile", z: 45, color: "#4aa3d8", dark: "#2d78a8", extra: `<path d="M16 52L-6 14" stroke=${INK} stroke-width=11 stroke-linecap=round /><path d="M16 52L-6 14" stroke=#d3202a stroke-width=6 stroke-linecap=round />` });
     mk.style.opacity = 0;
-    await anim(tt, [{ opacity: 0 }, { opacity: 1 }], 500);
+    await anim(tt, [{ opacity: 0 }, { opacity: 1 }], 500); bus.remove(); dr.remove(); cap.remove();
     label("翌朝", "left:700px;top:14px;font-size:28px;z-index:50");
     await wait(500); anim(mk, [{ opacity: 0 }, { opacity: 1 }], 200);
     const wr = add(`<div class=t>ハム</div>`, `left:212px;top:${88 + 160}px;font-size:56px;color:#d3202a;-webkit-text-stroke:0;font-weight:900;clip-path:inset(0 100% 0 0)`, bd);
     anim(mk, [{ transform: "none" }, { transform: "translate(-30px,-8px)" }], 200);
     await anim(wr, [{ clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)" }], 900, { easing: "linear" });
-    bubble("ハム、と…", 700, 270, 1500).style.zIndex = 60; await wait(800);
+    bubble("ハム、と…", 370, 300, 1500).style.zIndex = 60; await wait(800);
     label("終わっても、明日が決まっている", "left:200px;top:488px;font-size:28px;z-index:60");
     await wait(1500);
     await anim(tt, [{ opacity: 1 }, { opacity: 0 }], 500); tt.remove(); bus.remove(); cap.remove(); dr.remove();
@@ -1907,7 +1901,7 @@ Object.assign(scenes, {
 
   // ------------------------------------------------------------------ 足置きに昇格
   async i_T27_07() {
-    const sky = layer("z-index:8;background:linear-gradient(#7cc6ff,#d8f0ff 65%,#fff)");
+    const sky = layer("z-index:8;background:linear-gradient(#7cc6ff70,#d8f0ff30 65%,#fff0)");
     const h = ham(N); ov(h, frown);
     q6cloud("#fff3bf", 640, 38, 310, 170, 9, 0, "");
     add(`<div>特等雲</div>`, `left:560px;top:30px;padding:2px 14px;background:#ffd23c;border:4px solid ${INK};border-radius:8px;color:${INK};font-size:26px;z-index:22;white-space:nowrap`);
@@ -2014,10 +2008,10 @@ Object.assign(scenes, {
   // ------------------------------------------------------------------ 最期の一瞬を撮影
   async i_T29_02() {
     const h = ham(N);
-    const dk = layer("z-index:8;background:#000b");
+    const dk = layer("z-index:8;background:#00000030");
     await wait(400); chip("デスしてキルカムが流れた");
     // 遺影の壁
-    const wall = add(`<div></div>`, `left:560px;top:60px;width:386px;height:230px;background:#6a5a48;border:6px solid ${INK};z-index:9;border-radius:10px`);
+    const wall = add(`<div></div>`, `left:560px;top:60px;width:386px;height:230px;background:#6a5a48;border:6px solid ${INK};z-index:9;border-radius:10px;transform-origin:100% 0;scale:.75`);
     add(`<div>遺影コレクション</div>`, `left:0;top:6px;width:100%;text-align:center;font-size:24px;color:#e8dcc0`, wall);
     const faceSvg = k => `<svg viewBox="0 0 100 100" style="left:0;top:0;width:100%;height:100%"><circle cx=50 cy=56 r=36 fill=#fbf5e9 stroke=${INK} stroke-width=4 /><circle cx=36 cy=14 r=12 fill=#aaa1a0 stroke=${INK} stroke-width=3 /><circle cx=64 cy=14 r=12 fill=#aaa1a0 stroke=${INK} stroke-width=3 />${k}</svg>`;
     const kinds = [`<path d="M30 46l14 8M44 46l-14 8M58 46l14 8M72 46l-14 8" stroke=${INK} stroke-width=3 /><path d="M36 70Q50 84 64 68" fill=none stroke=${INK} stroke-width=3 />`,
@@ -2028,11 +2022,11 @@ Object.assign(scenes, {
     wall.slotX = 14 + 2 * 122;
     add(`<div>？</div>`, `left:${wall.slotX}px;top:50px;width:100px;height:125px;border:4px dashed #e8dcc0;color:#e8dcc0;font-size:44px;text-align:center;line-height:117px`, wall);
     // キルカム
-    const kc = add(`<div></div>`, `left:40px;top:90px;width:480px;height:310px;background:linear-gradient(#5a7090,#2a3550);border:5px solid #fff;overflow:hidden;z-index:12`);
+    const kc = add(`<div></div>`, `left:40px;top:90px;width:360px;height:230px;background:linear-gradient(#5a7090,#2a3550);border:5px solid #fff;overflow:hidden;z-index:12;transform-origin:0 0;scale:.8`);
     add(`<div>● KILLCAM</div>`, "left:12px;top:8px;font-size:24px;color:#ff5a4a;z-index:5", kc);
-    add(`<div></div>`, "left:0;top:230px;width:100%;height:80px;background:#3b4a3a", kc);
+    add(`<div></div>`, "left:0;top:170px;width:100%;height:60px;background:#3b4a3a", kc);
     pop(kc, 250);
-    const kh = q6hm(N, 150, 20, 190, "", kc);
+    const kh = q6hm(N, 100, 10, 150, "", kc);
     await wait(400);
     await anim(kh, [{ transform: "translate(-200px,-120px) rotate(-60deg)" }, { transform: "translate(-50px,-30px) rotate(-18deg)", offset: .6 }, { transform: "translate(0,20px) rotate(10deg)" }], 900, { easing: "ease-in" });
     await wait(150);
@@ -2048,8 +2042,8 @@ Object.assign(scenes, {
     // 額に入れる
     const un = zari(10, 380, 110, { face: "smile", color: "#555", dark: "#333", acc: "tie", z: 45 }); anim(un, [{ transform: "translateX(-140px)" }, { transform: "none" }], 400);
     await wait(500);
-    const pf = frm(0, 0, 220, "", s, 44); pf.style.left = "170px"; pf.style.top = "108px";
-    q6hm(N, 28, 22, 150, "", pf); // 遺影の顔
+    const pf = frm(0, 0, 170, "", s, 44); pf.style.left = "135px"; pf.style.top = "99px";
+    q6hm(N, 18, 14, 115, "", pf); // 遺影の顔
     const pe = pf.lastChild; ov(pe, whiteEyes + openMouth + `<path d="M560 700q-14 90 14 150q34-60 12-150" fill=#cfeaff stroke=${INK} stroke-width=8 />`);
     pf.style.overflow = "hidden"; pf.style.transformOrigin = "0 0";
     add(`<div></div>`, "left:-8px;top:-8px;width:80px;height:80px;background:#111;clip-path:polygon(0 0,100% 0,0 100%)", pf);
@@ -2058,10 +2052,10 @@ Object.assign(scenes, {
     anim(pf, [{ transform: "scale(1.15)" }, { transform: "scale(1)" }], 160);
     await wait(900);
     // 壁へ
-    const tx = 560 + 6 + wall.slotX - 170, ty = 60 + 6 + 50 - 108;
+    const tx = 854.5 - 135, ty = 102 - 99;
     anim(un, [{ transform: "none" }, { transform: "translate(470px,-190px)" }], 1000);
-    await anim(pf, [{ transform: "scale(1)" }, { transform: `translate(${tx}px,${ty - 40}px) scale(.45)`, offset: .6 }, { transform: `translate(${tx}px,${ty}px) scale(.455)` }], 1000);
-    anim(pf, [{ transform: `translate(${tx}px,${ty}px) scale(.455) rotate(0)` }, { transform: `translate(${tx}px,${ty}px) scale(.455) rotate(7deg)` }, { transform: `translate(${tx}px,${ty}px) scale(.455) rotate(-5deg)` }, { transform: `translate(${tx}px,${ty}px) scale(.455) rotate(0)` }], 700);
+    await anim(pf, [{ transform: "scale(1)" }, { transform: `translate(${tx}px,${ty - 40}px) scale(.44)`, offset: .6 }, { transform: `translate(${tx}px,${ty}px) scale(.444)` }], 1000);
+    anim(pf, [{ transform: `translate(${tx}px,${ty}px) scale(.444) rotate(0)` }, { transform: `translate(${tx}px,${ty}px) scale(.444) rotate(7deg)` }, { transform: `translate(${tx}px,${ty}px) scale(.444) rotate(-5deg)` }, { transform: `translate(${tx}px,${ty}px) scale(.444) rotate(0)` }], 700);
     await wait(500);
     // ハムの嘆き
     const arm = ov(h, `<path d="M180 900Q-120 860 -300 560" fill=none stroke=${INK} stroke-width=96 stroke-linecap=round /><path d="M180 900Q-120 860 -300 560" fill=none stroke=#fbf5e9 stroke-width=66 stroke-linecap=round />`);
@@ -2073,9 +2067,8 @@ Object.assign(scenes, {
   // ------------------------------------------------------------------ 通夜で肩が震える
   async i_T29_06() {
     await wait(400); chip("試合に敗北した");
-    const hall = layer("z-index:9;background:#2c2733;opacity:0");
-    add(`<div></div>`, `left:0;top:0;width:960px;height:62px;background:repeating-linear-gradient(90deg,#111 0 60px,#f4f4f4 60px 120px);border-bottom:5px solid ${INK}`, hall);
-    add(`<div></div>`, `left:0;top:380px;width:960px;height:160px;background:#6b5a3e`, hall);
+    const hall = layer("z-index:9;background:#2c273340;opacity:0");
+    add(`<div></div>`, `left:0;top:0;width:960px;height:40px;opacity:.8;background:repeating-linear-gradient(90deg,#111 0 60px,#f4f4f4 60px 120px);border-bottom:5px solid ${INK}`, hall);
     add(`<div></div>`, `left:190px;top:300px;width:460px;height:50px;background:#e8dcc0;border:5px solid ${INK}`, hall);
     add(`<div></div>`, `left:240px;top:255px;width:360px;height:50px;background:#d6c590;border:5px solid ${INK}`, hall);
     // 花
@@ -2128,13 +2121,13 @@ Object.assign(scenes, {
     const ch = q6chat(14, 70, 340, ["AI生成乙", "合成だろこれ", "指が7本ある"]);
     for (let i = 0; i < 3; i++) { await wait(380); ch.show(i); }
     await wait(500); say("え?", 560, 80, { size: 70, color: "#ff5a4a", ms: 800 }); hop(h, 30); await wait(900);
-    const dk = layer("z-index:33;background:#000c"); pop(dk, 200);
+    const dk = layer("z-index:33;background:#00000040"); pop(dk, 200);
     const hand = n => { let f = "", tx = ""; for (let i = 0; i < n; i++) { const a = n === 1 ? 0 : -72 + 144 * i / (n - 1), r = a * Math.PI / 180;
       f += `<g transform="rotate(${a} 200 240)" data-i=${i}><rect x=186 y=64 width=28 height=170 rx=14 fill=#fbf5e9 stroke=${INK} stroke-width=6 /></g>`;
       tx += `<text id=n${i} x=${200 + Math.sin(r) * 190} y=${240 - Math.cos(r) * 190 + 10} text-anchor=middle font-size=34 font-weight=900 fill=#ffd23c stroke=#3a0a00 stroke-width=6 paint-order=stroke opacity=0>${i + 1}</text>`; }
       return `<svg viewBox="0 0 400 320" style="left:0;top:0;width:100%;height:100%;overflow:visible">${f}<ellipse cx=200 cy=262 rx=108 ry=66 fill=#fbf5e9 stroke=${INK} stroke-width=7 />${tx}</svg>`; };
-    const hw = add(`<div></div>`, "left:250px;top:110px;width:460px;height:368px;z-index:35");
-    const lb = add(`<div class=lab>自分の手を数える</div>`, "left:380px;top:70px;z-index:36;font-size:28px");
+    const hw = add(`<div></div>`, "left:290px;top:140px;width:380px;height:304px;z-index:35");
+    const lb = add(`<div class=lab>自分の手を数える</div>`, "left:330px;top:100px;z-index:36;font-size:26px");
     const passes = [[7, 270, "1…2…3…4…5…6…7本!?"], [8, 170, "もう1回…8本!?"], [10, 110, "…10本!?"], [12, 80, "増えてる!!"]];
     for (const [n, ms, msg] of passes) {
       hw.innerHTML = hand(n); lb.textContent = msg;
@@ -2185,7 +2178,7 @@ Object.assign(scenes, {
 
   // ------------------------------------------------------------------ 連鎖の頂点のはず
   async i_T31_01() {
-    const bd = layer("z-index:8;background:radial-gradient(#245a38,#12301e);");
+    const bd = layer("z-index:8;background:radial-gradient(#245a3870,#12301e60);");
     const D = add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:9;transform-origin:480px 500px");
     await wait(400); chip("敵を1キルしたとき");
     label("食物連鎖図", "right:16px;top:16px;font-size:30px;z-index:20");
@@ -2257,7 +2250,7 @@ Object.assign(scenes, {
 
   // ------------------------------------------------------------------ 宿主がどんどん縮む
   async i_T32_03() {
-    const pg = layer("z-index:9;background:#efe4c4");
+    const pg = layer("z-index:9;background:#efe4c4;transform-origin:100% 100%;scale:.62");
     add(`<div></div>`, "left:478px;top:0;width:4px;height:540px;background:#00000033", pg);
     add(`<div>いきもの図鑑　No.7　ハム</div>`, `left:30px;top:56px;font-size:32px;color:${INK};font-weight:900`, pg);
     add(`<div>〔共生？〕 ほぼ共生。たぶん共生。</div>`, `left:30px;top:100px;font-size:22px;color:#6b4522`, pg);
@@ -2276,7 +2269,7 @@ Object.assign(scenes, {
     await wait(500); chip("連続デス ×3");
     let hs = hosts[0](); const hmm = q6hm(N, ...hamAt[0], "z-index:4", pond); hmm.style.left = hamAt[0][0] + "px";
     await wait(300); anim(rEls[0], [{ opacity: 0 }, { opacity: 1 }], 300); hop(hmm, 20);
-    say("これは共生です", 240, 190, { size: 34, ms: 1200 }); await wait(1500);
+    say("これは共生です", 514, 323, { size: 24, ms: 1200 }); await wait(1500);
     for (let i = 1; i < 4; i++) {
       chip(`連続デス ×${i}`.replace(/×\d/, `×${i + 0}`)); chip("宿主を乗り換えた");
       anim(hs, [{ opacity: 1 }, { opacity: 0, transform: "scale(.6)" }], 300); await wait(250);
@@ -2284,13 +2277,13 @@ Object.assign(scenes, {
       const [x, y, w] = hamAt[i]; hop(hmm, 24);
       hmm.style.transition = "all .3s"; hmm.style.left = x + "px"; hmm.style.top = y + "px"; hmm.style.width = w + "px"; hmm.style.height = w * 1271 / 1237 + "px";
       await wait(400); anim(rEls[i], [{ opacity: 0 }, { opacity: 1 }], 300);
-      say(["", "ちょっと狭い…", "ぎゅうぎゅう…", "ぷかぷか…"][i], 240, 170, { size: 30, ms: 900 }); await wait(1300);
+      say(["", "ちょっと狭い…", "ぎゅうぎゅう…", "ぷかぷか…"][i], 514, 310, { size: 22, ms: 900 }); await wait(1300);
     }
     // 沈む
     const grp = [hs, hmm];
     grp.forEach(e => anim(e, [{ transform: "none" }, { transform: "translateY(80px)" }], 1800, { easing: "ease-in" }));
     for (let i = 0; i < 6; i++) { const b = add(`<div></div>`, `left:${190 + rnd(-30, 50)}px;top:${330}px;width:${rnd(10, 22)}px;height:${rnd(10, 22)}px;border-radius:50%;border:3px solid #fff;z-index:6`, pond); anim(b, [{ transform: "none", opacity: 1 }, { transform: `translateY(${-rnd(120, 260)}px)`, opacity: 0 }], 1400, { delay: i * 220 }); }
-    const bb = add(`<div class=bub>共生です</div>`, "left:230px;top:170px;z-index:30;font-size:26px"); pop(bb, 200);
+    const bb = add(`<div class=bub>共生です</div>`, "left:230px;top:170px;z-index:30;font-size:26px", pond); pop(bb, 200);
     await wait(2400);
   },
 
@@ -2308,7 +2301,7 @@ const q7bill = (x, y) => add(`<div>¥</div>`, `left:${x}px;top:${y}px;width:64px
 Object.assign(scenes, {
   async i_T33_05() { // ご先祖さま全員
     const h = ham(R1); await wait(500); chip("試合に勝利"); say("勝利!!", 480, 70, { size: 60, ms: 1000 }); rain(14);
-    const bd = add(`<div></div>`, `left:24px;top:110px;width:672px;height:380px;background:#6a4528;border:6px solid ${INK};border-radius:14px;z-index:6`); pop(bd);
+    const bd = add(`<div></div>`, `left:24px;top:110px;width:672px;height:380px;background:#6a4528;border:6px solid ${INK};border-radius:14px;z-index:6;scale:.72;transform-origin:0 0`); pop(bd);
     add(`<div class=lab>ハム家　家系図</div>`, "left:200px;top:12px;font-size:28px", bd);
     add(`<svg viewBox="0 0 640 40" style="left:20px;top:190px;width:640px;height:40px"><path d="M10 20H630" stroke=${INK} stroke-width=6 /></svg>`, "", bd);
     const fr = [["初代", "crown"], ["ひいじいちゃん", "glasses"], ["じいちゃん", "tie"], ["とうさん", "chef"]].map(([n, acc], i) => {
@@ -2317,7 +2310,7 @@ Object.assign(scenes, {
       const cur = add(`<div>?</div>`, `left:0;top:0;width:100%;height:100%;background:#7a1f2a;color:#fc3;font-size:80px;text-align:center;line-height:210px;z-index:5`, f);
       add(`<div class=lab>${n}</div>`, `left:${22 + i * 160}px;top:282px;font-size:19px;background:#000b`, bd);
       f.cur = cur; return f; });
-    add(`<div class=t>→ ハム</div>`, "left:640px;top:310px;font-size:30px;color:#fff;z-index:8");
+    add(`<div class=t>→ ハム</div>`, "left:520px;top:250px;font-size:26px;color:#fff;z-index:8");
     await wait(700);
     for (let i = 0; i < 4; i++) { await anim(fr[i].cur, [{ transform: "none" }, { transform: "translateY(-100%)" }], 380); await wait(i < 3 ? 380 : 150);
       if (i === 1) { h.img.style.filter = "brightness(1.1)"; }
@@ -2325,10 +2318,10 @@ Object.assign(scenes, {
     const e = ov(h, whiteEyes + openMouth); h.classList.add("trem"); say("えっ", 600, 230, { size: 72, color: "#ff5a4a", ms: 1500 });
     await wait(900); chip("ご先祖さまが拍手");
     fr.forEach((f, i) => { const zz = f.querySelector("div"); });
-    const cl = add(`<div class=t>カチカチカチカチ</div>`, "left:360px;top:60px;translate:-50% 0;font-size:44px;color:#fff;z-index:30");
+    const cl = add(`<div class=t>カチカチカチカチ</div>`, "left:280px;top:60px;translate:-50% 0;font-size:40px;color:#fff;z-index:30");
     anim(cl, [{ transform: "scale(.8) rotate(-4deg)" }, { transform: "scale(1.15) rotate(4deg)" }], 150, { iterations: 12, direction: "alternate" });
     fr.forEach((f, i) => anim(f, [{ transform: "none" }, { transform: "translateY(-8px) rotate(2deg)" }], 140, { iterations: 14, direction: "alternate", delay: i * 30 }));
-    await wait(1700); label("全員、ハサミの音。", "left:310px;top:496px;translate:-50% 0;font-size:26px;z-index:30"); await wait(1500);
+    await wait(1700); label("全員、ハサミの音。", "left:300px;top:420px;translate:-50% 0;font-size:26px;z-index:30"); await wait(1500);
   },
 
   async i_T33_10() { // 脱皮して帰宅
@@ -2385,7 +2378,7 @@ Object.assign(scenes, {
 
   async i_T35_06() { // 帳簿が合わない
     const h = ham(R1); await wait(700); chip("試合に敗北");
-    const pn = add(`<div></div>`, `left:30px;top:90px;width:530px;height:300px;background:#fff8e6;border:5px solid ${INK};border-radius:10px;color:#222;z-index:6`); pop(pn);
+    const pn = add(`<div></div>`, `left:30px;top:90px;width:530px;height:300px;background:#fff8e6;border:5px solid ${INK};border-radius:10px;color:#222;z-index:6;scale:.75;transform-origin:0 0`); pop(pn);
     add(`<div>会計帳簿</div>`, "left:20px;top:10px;font-size:30px;color:#222", pn);
     const row = (t, y, c) => { add(`<div>${t}</div>`, `left:24px;top:${y}px;font-size:34px;color:#222`, pn); return add(`<div class=t>0 ↑</div>`, `left:300px;top:${y}px;font-size:46px;color:${c}`, pn); };
     const a = row("駆除数", 80, "#2a8a3a"), b = row("池の在庫", 170, "#2a8a3a");
@@ -2424,10 +2417,10 @@ Object.assign(scenes, {
 
   async i_T36_07() { // 発掘が雑すぎる
     const h = null; await wait(300);
-    const bg = layer("background:linear-gradient(#8fc4e8 0 36%,#a9784a 36% 56%,#8a5c36 56% 78%,#6a4326 78%);z-index:2;opacity:0"); anim(bg, [{ opacity: 0 }, { opacity: 1 }], 400);
-    [0, 1, 2, 3, 4, 5, 6, 7].forEach(i => add(`<div></div>`, `left:${60 + i * 118}px;top:${290 + (i % 3) * 70}px;width:${14 + i % 3 * 6}px;height:10px;border-radius:50%;background:#5a381f;z-index:3`));
+    const bg = add(`<div></div>`, `left:180px;top:398px;width:560px;height:142px;background:linear-gradient(#a9784a 0 40%,#8a5c36 40% 75%,#6a4326 75%);border-top:5px solid ${INK};border-radius:14px 14px 0 0;z-index:2;opacity:0`); anim(bg, [{ opacity: 0 }, { opacity: 1 }], 400);
+    [0, 1, 2, 3, 4].forEach(i => add(`<div></div>`, `left:${210 + i * 105}px;top:${450 + (i % 3) * 30}px;width:${14 + i % 3 * 6}px;height:10px;border-radius:50%;background:#5a381f;z-index:3`));
     const fz = add(`<div><img src="${N}" style="width:100%;height:100%;filter:sepia(.9) brightness(.8) contrast(1.1)"></div>`, `left:420px;top:210px;width:210px;height:216px;z-index:4;transform-origin:50% 100%`);
-    const mound = add(`<div></div>`, `left:330px;top:350px;width:400px;height:120px;background:#8a5c36;border-radius:50% 50% 0 0;z-index:5;border-top:4px solid ${INK}`);
+    const mound = add(`<div></div>`, `left:330px;top:392px;width:400px;height:90px;background:#8a5c36;border-radius:50% 50% 0 0;z-index:5;border-top:4px solid ${INK}`);
     const sign = label("ハム紀の地層", "left:20px;top:80px;font-size:28px;z-index:20");
     await wait(600); chip("ビッツ 100"); say("100bits", 480, 170, { size: 40, color: "#ffd23c", ms: 800 });
     const z1 = zari(250, 360, 100, { face: "smile", z: 7 }), brush = add(`<div></div>`, `left:330px;top:345px;width:60px;height:12px;background:#d9a45a;border:3px solid ${INK};z-index:8;transform-origin:0 50%`);
@@ -2496,9 +2489,7 @@ Object.assign(scenes, {
   },
 
   async i_T37_05() { // 空気はザリガニ製
-    const bg = layer("background:linear-gradient(#5a3b24 0 24%,#4a2f1c 24%);z-index:2;opacity:0");
-    [0, 1, 2, 3, 4, 5, 6].forEach(i => add(`<div></div>`, `left:${30 + i * 140}px;top:${60 + i % 3 * 24}px;width:34px;height:14px;border-radius:50%;background:#33200f`, bg));
-    anim(bg, [{ opacity: 0 }, { opacity: 1 }], 400);
+    const bg = add(`<div></div>`, "left:0;top:0;width:0;height:0;opacity:0");
     const room = add(`<div></div>`, `left:500px;top:150px;width:440px;height:380px;background:linear-gradient(#f2dcb0 0 78%,#9a3a3a 78%);border:6px solid ${INK};border-radius:14px;z-index:3`);
     add(`<div class=lab>地下シェルター（1名様）</div>`, `left:520px;top:112px;font-size:20px;z-index:20`);
     const h = ham(R2);
@@ -2576,8 +2567,7 @@ const q8fall = async h => { // 落下してデス
 Object.assign(scenes, {
 
   async i_T37_09() { // 定員3名の中身
-    layer("z-index:2;background:linear-gradient(#6e5036 0 85%,#3f2d1e 85%)",
-      [[40, 300, 50], [880, 360, 40], [640, 180, 30], [130, 140, 36], [800, 120, 44]].map(([x, y, w]) => `<div style="left:${x}px;top:${y}px;width:${w}px;height:${w * .6}px;border-radius:50%;background:#5a4029"></div>`).join(""));
+    layer("z-index:2;top:460px;height:80px;background:#3f2d1ecc");
     add(`<div></div>`, "left:240px;top:110px;width:280px;height:350px;border-radius:140px 140px 0 0;background:radial-gradient(#ffcf6a,#5a3a18 70%,#221008);z-index:3");
     const door = add(`<svg viewBox="0 0 300 360"><defs><pattern id=q8hz width=24 height=24 patternUnits=userSpaceOnUse patternTransform="rotate(45)"><rect width=12 height=24 fill=#fc3 /><rect x=12 width=12 height=24 fill=#222 /></pattern></defs>
       <path d="M8 360V130Q8 8 150 8Q292 8 292 130V360Z" fill=#8d99a6 stroke=${INK} stroke-width=8 /><path d="M30 345V135Q30 30 150 30Q270 30 270 135V345Z" fill=#a9b4bf stroke=${INK} stroke-width=5 />
@@ -2646,19 +2636,19 @@ Object.assign(scenes, {
     const fl = add(`<div></div>`, "left:0;top:0;width:960px;height:540px;background:#fff;z-index:60"); anim(fl, [{ opacity: 0 }, { opacity: 1 }], 120);
     await wait(150);
     [h, cho, br, met, sky].forEach(e => e.remove());
-    const rub = layer("z-index:20;background:linear-gradient(#5a4a44,#2c2220 60%,#1a1412)",
-      `<div style="left:0;top:380px;width:960px;height:160px;background:#2a2220"></div>` +
+    const rub = layer("z-index:20;background:#2a141466",
+      `<div style="left:0;top:450px;width:960px;height:90px;background:#2a2220cc"></div>` +
       [[60, 360, 130, 70], [200, 400, 90, 50], [330, 380, 150, 80], [520, 410, 110, 60], [700, 370, 140, 90], [840, 400, 100, 60]].map(([x, y, w, hh]) => `<div style="left:${x}px;top:${y}px;width:${w}px;height:${hh}px;background:#4a3d38;border:4px solid ${INK};clip-path:polygon(0 100%,10% 30%,40% 0,75% 20%,100% 100%)"></div>`).join("") +
       `<div style="left:620px;top:330px;width:20px;height:90px;background:#8a6a3a;border:3px solid ${INK};rotate:-18deg"></div><div style="left:700px;top:200px;width:200px;height:200px;border-radius:50%;background:radial-gradient(#8886,#0000 70%)"></div><div style="left:130px;top:160px;width:260px;height:240px;border-radius:50%;background:radial-gradient(#7776,#0000 70%)"></div>`);
     const ps = add(`<div>隕石は<br>不燃ゴミ<br>来週</div>`, "left:392px;top:210px;width:170px;text-align:center;font-size:30px;line-height:1.2;color:#222;background:#fff8e6;border:4px solid #331c16;padding:8px;rotate:-5deg;z-index:30");
     add(`<div></div>`, "left:470px;top:330px;width:14px;height:120px;background:#8a6a3a;border:3px solid #331c16;z-index:21");
-    anim(fl, [{ opacity: 1 }, { opacity: 0 }], 1000).then(() => fl.remove()); pop(ps, 300);
+    anim(fl, [{ opacity: 1 }, { opacity: 0 }], 300).then(() => fl.remove()); pop(ps, 300);
     await wait(2300); await anim(rub, [{ opacity: 1 }, { opacity: 0 }], 600); ps.remove(); rub.remove();
     chip("次の試合"); const h2 = ham(N); pop(h2, 350); await wait(1200);
   },
 
   async i_T39_02() { // ペンキ臭い
-    layer("z-index:1;background:#0b2a12a0");
+    layer("z-index:1;background:#0b2a1255");
     const h = ham(N);
     add(`<div>ゾンビ入隊受付</div>`, "left:60px;top:80px;background:#222;color:#9f9;border:4px solid #9f9;padding:6px 16px;font-size:32px;z-index:6;rotate:-3deg");
     const zs = [70, 190, 310].map((x, i) => zom(x, 365, 130, { z: 15 }));
@@ -2679,7 +2669,7 @@ Object.assign(scenes, {
   },
 
   async i_T39_06() { // 海のように割れる
-    layer("z-index:1;background:#0b2a12a0");
+    layer("z-index:1;background:#0b2a1255");
     const h = ham(N); const rows = [];
     for (let r = 0; r < 5; r++) for (let c = 0; c < 5; c++) { const z = zom(60 + c * 105 + (r % 2) * 50, 130 + r * 70, 100, { z: 12 + r, down: c % 2 === 0 }); z.r = r; rows.push(z); }
     await wait(900); chip("試合に敗北"); const m = ov(h, whiteEyes + openMouth); say("食べて！", 600, 120, { size: 62 });
@@ -2698,21 +2688,20 @@ Object.assign(scenes, {
   },
 
   async i_T39_08() { // パセリのハム
-    layer("z-index:2;background:#3a2230");
-    add(`<div>🧟 ゾンビビュッフェ 食べ放題</div>`, "left:380px;top:16px;font-size:28px;background:#000a;padding:4px 16px;border-radius:12px;z-index:6;white-space:nowrap");
-    const zb = zom(690, 70, 250, { z: 4 });
-    add(`<div></div>`, "left:0;top:360px;width:960px;height:180px;background:repeating-linear-gradient(90deg,#d33 0 40px,#fff 40px 80px);z-index:5;border-top:6px solid #922");
-    add(`<div></div>`, "left:130px;top:340px;width:600px;height:150px;border-radius:50%;background:radial-gradient(#fff 60%,#e3e8ee);border:6px solid #b8c0cc;z-index:6");
+        add(`<div>🧟 ゾンビビュッフェ 食べ放題</div>`, "left:380px;top:16px;font-size:28px;background:#000a;padding:4px 16px;border-radius:12px;z-index:6;white-space:nowrap");
+    const zb = zom(740, 225, 190, { z: 4 });
+    add(`<div></div>`, "left:0;top:470px;width:960px;height:70px;opacity:.7;background:repeating-linear-gradient(90deg,#d33 0 40px,#fff 40px 80px);z-index:5;border-top:6px solid #922");
+    add(`<div></div>`, "left:200px;top:380px;width:500px;height:110px;border-radius:50%;background:radial-gradient(#fff 60%,#e3e8ee);border:6px solid #b8c0cc;z-index:6");
     await wait(700); chip("チャネポ「ハムを皿に飾る」");
-    const zs = [260, 380, 500].map((x, i) => { const z = zari(x, 270, 120, { face: i === 1 ? "shock" : "sad", color: "#e32b14", dark: "#a31a0c", z: 8 }); pop(z); return z; });
-    add(`<div class=lab>メイン：ザリガニ</div>`, "left:290px;top:236px;z-index:9;font-size:20px");
-    ["#ffe066", "#fff3a0"].forEach((c, i) => add(`<div></div>`, `left:${230 + i * 330}px;top:${430}px;width:46px;height:46px;border-radius:50%;background:${c};border:4px solid #d8b400;z-index:9`));
+    const zs = [270, 380, 490].map((x, i) => { const z = zari(x, 300, 100, { face: i === 1 ? "shock" : "sad", color: "#e32b14", dark: "#a31a0c", z: 8 }); pop(z); return z; });
+    add(`<div class=lab>メイン：ザリガニ</div>`, "left:310px;top:268px;z-index:9;font-size:20px");
+    ["#ffe066", "#fff3a0"].forEach((c, i) => add(`<div></div>`, `left:${230 + i * 300}px;top:${440}px;width:36px;height:36px;border-radius:50%;background:${c};border:4px solid #d8b400;z-index:9`));
     await wait(800);
     const par = add(`<div><svg viewBox="0 0 110 110" style="left:0;top:0;width:100%;height:100%"><path d="${[...Array(16)].map((_, i) => { const a = i / 16 * 6.283, a2 = (i + .5) / 16 * 6.283; return `${i ? "L" : "M"}${55 + 52 * Math.cos(a)} ${55 + 52 * Math.sin(a)}L${55 + 38 * Math.cos(a2)} ${55 + 38 * Math.sin(a2)}`; }).join("")}Z" fill=#3a9a3a stroke=#1d6f1d stroke-width=3 /></svg>
-      <img src="${N}" style="left:18px;top:14px;width:74px;height:76px"></div>`, "left:560px;top:352px;width:110px;height:110px;z-index:9"); pop(par);
-    const pl = add(`<div class=lab style="font-size:18px">パセリ</div>`, "left:572px;top:322px;z-index:9");
+      <img src="${N}" style="left:18px;top:14px;width:74px;height:76px"></div>`, "left:560px;top:372px;width:90px;height:90px;z-index:9"); pop(par);
+    const pl = add(`<div class=lab style="font-size:18px">パセリ</div>`, "left:560px;top:342px;z-index:9");
     await wait(900);
-    const tg = add(`<div><svg viewBox="0 0 80 300" style="left:0;top:0;width:100%;height:100%;overflow:visible"><path d="M24 300L34 30Q40 0 46 30L56 300" fill=none stroke=${INK} stroke-width=16 stroke-linecap=round /><path d="M24 300L34 30Q40 0 46 30L56 300" fill=none stroke=#cfd8e0 stroke-width=8 stroke-linecap=round /></svg></div>`, "left:575px;top:200px;width:80px;height:300px;z-index:12;transform-origin:50% 100%");
+    const tg = add(`<div><svg viewBox="0 0 80 300" style="left:0;top:0;width:100%;height:100%;overflow:visible"><path d="M24 300L34 30Q40 0 46 30L56 300" fill=none stroke=${INK} stroke-width=16 stroke-linecap=round /><path d="M24 300L34 30Q40 0 46 30L56 300" fill=none stroke=#cfd8e0 stroke-width=8 stroke-linecap=round /></svg></div>`, "left:565px;top:220px;width:80px;height:300px;z-index:12;transform-origin:50% 100%");
     const T = (x, y) => ({ transform: `translate(${x}px,${y}px)` });
     await anim(tg, [T(0, -420), T(0, -150)], 600, { easing: "ease-in" }); // 先がパセリに届く位置
     say("ガシッ", 610, 330, { size: 36, color: "#fff", ms: 500 }); pl.remove();
@@ -2722,13 +2711,12 @@ Object.assign(scenes, {
     bubble("…パセリは残す派", 500, 130, 1700); await wait(900);
     await both([0, -300], [170, -90], 700);
     await anim(tg, [T(170, -90), T(170, -430)], 450);
-    const lb = add(`<div class=lab>皿の外</div>`, "left:760px;top:372px;z-index:12");
+    const lb = add(`<div class=lab>皿の外</div>`, "left:760px;top:400px;z-index:12");
     zs.forEach(z => z.innerHTML = zariSvg({ face: "shock", color: "#e32b14", dark: "#a31a0c" })); await wait(2000);
   },
 
   async i_T39_10() { // 最後に余るハム
-    layer("z-index:2;background:linear-gradient(#10182e,#1b2540)");
-    add(`<div>マッチング待ち ─ チーム分け</div>`, "left:250px;top:14px;font-size:30px;background:#000a;padding:4px 20px;border-radius:12px;z-index:6;white-space:nowrap");
+        add(`<div>マッチング待ち ─ チーム分け</div>`, "left:250px;top:14px;font-size:30px;background:#000a;padding:4px 20px;border-radius:12px;z-index:6;white-space:nowrap");
     const box = (x, col, name) => { add(`<div><div style="left:10px;top:4px;font-size:22px;color:${col}">${name}</div>${[0, 1, 2].map(i => `<div style="left:${15 + i * 95}px;top:56px;width:80px;height:80px;border:3px dashed ${col}88;border-radius:12px"></div>`).join("")}</div>`, `left:${x}px;top:70px;width:300px;height:160px;border:4px solid ${col};background:#0008;border-radius:14px;z-index:3`); };
     box(30, "#ff6a6a", "チームA"); box(630, "#6aa8ff", "チームB");
     const cap = zom(425, 62, 110, { cap: true, clip: true, down: true, z: 15 });
@@ -2752,7 +2740,7 @@ Object.assign(scenes, {
   },
 
   async i_T40_03() { // 陰謀論の赤い糸
-    layer("z-index:2;background:#b98a55 radial-gradient(#0002 1.5px,transparent 2px) 0 0/14px 14px;box-shadow:inset 0 0 0 14px #6b4423");
+    layer("z-index:2;width:710px;height:470px;opacity:.5;background:#b98a55 radial-gradient(#0002 1.5px,transparent 2px) 0 0/14px 14px;box-shadow:inset 0 0 0 14px #6b4423");
     const h = ham(N);
     const photo = (x, y, inner, cap, rot) => { const p = add(`<div><div style="left:10px;top:12px;width:100px;height:100px;background:linear-gradient(#cfd6dd,#9aa5b0);overflow:hidden">${inner}</div><div style="left:0;right:0;top:118px;text-align:center;font-size:15px;color:#222;white-space:nowrap">${cap}</div><div style="left:50px;top:-6px;width:18px;height:18px;border-radius:50%;background:#d3202a;border:3px solid #7a0e14"></div></div>`,
       `left:${x}px;top:${y}px;width:120px;height:150px;background:#fffdf4;border:3px solid #ddd;box-shadow:3px 5px 0 #0004;z-index:6;rotate:${rot}deg`); pop(p); return p; };
@@ -2781,13 +2769,13 @@ Object.assign(scenes, {
   async i_T40_06() { // 最後の晩餐、翌朝
     const night = layer("z-index:2;background:linear-gradient(#0e1030,#2a1d4a)", [...Array(18)].map(() => `<div style="left:${rnd(0, 940)}px;top:${rnd(10, 230)}px;font-size:${rnd(10, 24)}px;color:#ffe9a8">✦</div>`).join("")); night.style.opacity = 0;
     const morn = layer("z-index:3;opacity:0;background:linear-gradient(#8fd0ff,#ffe4b0 70%)",
-      `<div id=q8sun style="left:400px;top:560px;width:130px;height:130px;border-radius:50%;background:radial-gradient(#fff6c0,#ffc83a);box-shadow:0 0 60px #ffd23c"></div>`);
-    const sun = morn.firstChild;
+      "");
+    const sun = add(`<div></div>`, "left:400px;top:560px;width:130px;height:130px;border-radius:50%;background:radial-gradient(#fff6c0,#ffc83a);box-shadow:0 0 60px #ffd23c;z-index:3");
     const h = ham(N);
-    await wait(700); chip("試合に敗北"); shake(h); say("やはり終わりだ", 480, 120, { size: 50, ms: 1300 }); anim(night, [{ opacity: 0 }, { opacity: 1 }], 600);
+    await wait(700); chip("試合に敗北"); shake(h); say("やはり終わりだ", 480, 120, { size: 50, ms: 1300 }); anim(night, [{ opacity: 0 }, { opacity: .3 }], 600);
     add(`<div>最後の晩餐</div>`, "left:370px;top:20px;font-size:34px;background:#000a;padding:4px 20px;border-radius:12px;z-index:6;white-space:nowrap");
     const zs = [90, 220, 350, 480].map((x, i) => zari(x, 326, 110, { face: "smile", z: 11 }));
-    const tbl = add(`<div></div>`, "left:0;top:442px;width:960px;height:100px;background:linear-gradient(#efe6d0 0 26px,#b5a888 26px);border-top:5px solid #7a6a48;z-index:12");
+    const tbl = add(`<div></div>`, "left:0;top:442px;width:960px;height:100px;opacity:.8;background:linear-gradient(#efe6d0 0 26px,#b5a888 26px);border-top:5px solid #7a6a48;z-index:12");
     add(`<div>🕯️</div>`, "left:575px;top:392px;font-size:46px;z-index:13");
     const cnt = add(`<div class=lab>備蓄の種 ×12</div>`, "right:14px;top:14px;z-index:30;font-size:26px");
     const sack = add(`<div>備蓄</div>`, "left:620px;top:360px;width:100px;height:100px;background:#b98a55;border:4px solid #331c16;border-radius:30% 30% 16% 16%;text-align:center;line-height:100px;font-size:34px;z-index:13");
@@ -2801,7 +2789,7 @@ Object.assign(scenes, {
     sack.style.height = "30px"; sack.style.top = "430px"; sack.style.lineHeight = "30px"; sack.style.fontSize = "22px"; await wait(800);
     chip("翌朝"); const stp = stamp("翌朝", 480, 190, 80); wait(1500).then(() => fade(stp, 300));
     zs.forEach(z => z.innerHTML = zariSvg({ face: "smile" }));
-    anim(night, [{ opacity: 1 }, { opacity: 0 }], 1200); anim(morn, [{ opacity: 0 }, { opacity: 1 }], 1200); anim(sun, [{ transform: "none" }, { transform: "translateY(-410px)" }], 1800);
+    anim(night, [{ opacity: .3 }, { opacity: 0 }], 1200); anim(morn, [{ opacity: 0 }, { opacity: .25 }], 1200); anim(sun, [{ transform: "none" }, { transform: "translateY(-410px)" }], 1800); wait(1800).then(() => sun.remove());
     const bd = add(`<div>🐦</div>`, "left:100px;top:100px;font-size:40px;z-index:5"); anim(bd, [{ transform: "translateX(-200px)" }, { transform: "translateX(900px) translateY(-30px)" }], 2600, { easing: "linear" });
     say("ちゅんちゅん", 300, 120, { size: 36, color: "#fff", ms: 1200 });
     await wait(1800); h.remove(); const h2 = ham(N); h2.style.zIndex = 10; ov(h2, whiteEyes + frown); cnt.textContent = "備蓄の種 ×0";
@@ -2839,7 +2827,7 @@ Object.assign(scenes, {
     await wait(800); chip("ウルトゲージが0%に戻った"); shake(h); const eyes = q8dead(h); say("デス", 560, 230, { color: "#ff6a5a", ms: 800 });
     for (const p of [70, 40, 15, 0]) { await wait(160); setG(p); }
     await wait(500); say("戻ってやり直す！", 400, 150, { size: 46, ms: 1100 }); await wait(1300);
-    const dial = layer("z-index:30;background:radial-gradient(#2a1050,#050008)"); dial.style.opacity = 0; anim(dial, [{ opacity: 0 }, { opacity: 1 }], 300);
+    const dial = layer("z-index:30;background:radial-gradient(#2a105055,#05000855)"); dial.style.opacity = 0; anim(dial, [{ opacity: 0 }, { opacity: 1 }], 300);
     const ring = add(`<div></div>`, "left:300px;top:90px;width:360px;height:360px;border-radius:50%;border:10px solid #fc3;box-shadow:0 0 40px #fc3;z-index:31", dial);
     const nd = add(`<div></div>`, "left:170px;top:20px;width:12px;height:160px;background:#ff6a5a;border-radius:6px;transform-origin:50% 100%;z-index:32", ring);
     const ticks = add(`<div></div>`, "left:6px;top:6px;right:6px;bottom:6px;border-radius:50%;background:repeating-conic-gradient(#fc3 0 1.5deg,#0000 1.5deg 15deg);-webkit-mask:radial-gradient(circle,#0000 62%,#000 63%);mask:radial-gradient(circle,#0000 62%,#000 63%)", ring);
@@ -2849,7 +2837,7 @@ Object.assign(scenes, {
     anim(dial, [{ filter: "hue-rotate(0)" }, { filter: "hue-rotate(360deg)" }], 2400, { easing: "linear" });
     for (const t of ["-100年", "-1万年", "-100万年", "-6,600万年", "-1億年", "-2億5000万年"]) { yr.textContent = t; await wait(380); }
     eyes.remove(); h.img.style.filter = "none";
-    chip("戻りすぎ"); const pre = layer("z-index:30;background:linear-gradient(#ff9a4a,#ffd890 55%,#6b8a3a 55%,#4a6a2a)",
+    chip("戻りすぎ"); const pre = layer("z-index:30;background:linear-gradient(#ff9a4a44,#ffd89044 55%,#6b8a3a66 55%,#4a6a2a66)",
       `<div style="left:620px;top:140px;width:0;height:0;border:150px solid transparent;border-bottom:200px solid #5a3a2a;border-top:0"></div><div style="left:716px;top:120px;width:70px;height:40px;border-radius:50%;background:#e03010;box-shadow:0 0 30px #ff6a00"></div>
       <div style="left:60px;top:330px;font-size:70px">🌴</div><div style="left:860px;top:350px;font-size:70px">🌴</div><div style="left:360px;top:420px;font-size:50px">🌿</div>`);
     pre.style.opacity = 0; await anim(pre, [{ opacity: 0 }, { opacity: 1 }], 400); dial.remove(); await wait(150);
@@ -2867,7 +2855,7 @@ Object.assign(scenes, {
     const ln = add(`<div class=lab style="font-size:18px">現代と同じ角度</div>`, "left:560px;top:150px;z-index:42"); await wait(300);
     await anim(dh, [{ transform: "none" }, { transform: "translate(140px,70px) rotate(24deg)" }], 220, { easing: "ease-in" });
     h2.style.visibility = "hidden"; ug.remove(); say("バクッ", 700, 330, { size: 72, color: "#ff6a5a", z: 45, ms: 900 }); [0, 1, 2, 3, 4].forEach(() => flash(600, 900, 300, 450)); await wait(1000); ln.remove();
-    const fos = layer("z-index:60", [["#d8c08f", 0], ["#b89a62", 90], ["#9a7a48", 170], ["#7a5a34", 250], ["#5a3e22", 340]].map(([c, y]) => `<div style="left:0;top:${70 + y}px;width:960px;height:${y > 300 ? 200 : 100}px;background:${c};border-top:4px solid ${INK}"></div>`).join("") + `<div style="left:0;top:0;width:960px;height:74px;background:#ffd890"></div><div style="left:260px;top:300px;width:200px;height:205px;filter:sepia(1) brightness(1.15) contrast(.5);opacity:.85"><img src="${N}" style="width:100%;height:100%"></div>`);
+    const fos = layer("z-index:60", [["#d8c08f", 0], ["#b89a62", 90], ["#9a7a48", 170], ["#7a5a34", 250], ["#5a3e22", 340]].map(([c, y]) => `<div style="left:0;top:${300 + y * .5}px;width:960px;height:${y > 300 ? 100 : 50}px;background:${c};border-top:4px solid ${INK}"></div>`).join("") + `<div style="left:260px;top:330px;width:200px;height:205px;filter:sepia(1) brightness(1.15) contrast(.5);opacity:.85"><img src="${N}" style="width:100%;height:100%"></div>`);
     fos.style.opacity = 0; await anim(fos, [{ opacity: 0 }, { opacity: 1 }], 400);
     chip("数億年後"); const sg = add(`<div>ループ<br>9回目</div>`, "left:600px;top:-200px;width:150px;text-align:center;font-size:36px;line-height:1.2;color:#222;background:#fff8e6;border:5px solid #331c16;padding:8px;z-index:62", fos);
     add(`<div></div>`, "left:670px;top:-100px;width:14px;height:260px;background:#8a6a3a;border:3px solid #331c16;z-index:61", fos).style.top = "140px";
@@ -2903,11 +2891,11 @@ Object.assign(scenes, {
   const stars = (n, h = 540) => { for (let i = 0; i < n; i++) add(`<div></div>`, `left:${rnd(0, 950)}px;top:${rnd(0, h)}px;width:${rnd(2, 5)}px;height:${rnd(2, 5)}px;border-radius:50%;background:#fff;opacity:${rnd(.4, 1)};z-index:3`); };
   // 講堂 (ハム博士シーン用)
   const hall = () => {
-    layer(`background:linear-gradient(90deg,#5a1f2a,#7a2a38 14%,#2b2438 14% 86%,#7a2a38 86%,#5a1f2a);z-index:2`);
-    layer(`top:430px;height:110px;background:#5a3a2a;z-index:3`);
+    
+    
     label("🎓 ハム学会", "right:16px;top:14px;font-size:20px");
     add(`<div><div style="left:0;right:0;top:20px;text-align:center;font-size:24px;color:#ffd23c">ハム学会</div></div>`, `left:690px;top:470px;width:250px;height:80px;background:#6a4a2a;border:5px solid ${INK};z-index:12`);
-    return add(`<div></div>`, `left:30px;top:70px;width:600px;height:340px;background:#fff;border:8px solid #333;color:${INK};z-index:8`);
+    return add(`<div></div>`, `left:48px;top:108px;zoom:.62;width:600px;height:340px;background:#fff;border:8px solid #333;color:${INK};z-index:8`);
   };
   const slideSvg = (sl, inner) => add(`<svg viewBox="0 0 584 324" style="left:0;top:0;width:584px;height:324px;font-weight:900;font-family:inherit">${inner}</svg>`, "", sl);
   const redCircle = (e, ms = 500) => { e.style.opacity = 1; return anim(e, [{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], ms, { easing: "linear" }); };
@@ -2949,7 +2937,7 @@ Object.assign(scenes, {
 
     // ---------- T42-04 人間大砲ウルト ----------
     async i_T42_04() {
-      layer(`background:linear-gradient(#070b24,#1a2250 74%,#27552f 74%);z-index:2`); stars(28, 380);
+      layer(`background:#0a1030;opacity:.4;z-index:2`); layer(`top:480px;height:60px;background:#27552f;opacity:.7;z-index:3`);
       add(`<div></div>`, "left:640px;top:440px;width:110px;height:56px;border-radius:50%;background:#f4a7b9;border:4px solid #331c16;z-index:9");
       const king = pic(R2, 720, 330, 200, "z-index:10;transform:rotate(-80deg)");
       const zz = add(`<div class=t>💤</div>`, "left:640px;top:400px;font-size:36px;z-index:11;-webkit-text-stroke:0");
@@ -2994,7 +2982,7 @@ Object.assign(scenes, {
 
     // ---------- T42-06 検品で規格外 ----------
     async i_T42_06() {
-      layer(`background:linear-gradient(#26283a,#26283a 70%,#3a3d52 70%);z-index:2`);
+      layer(`background:#1a1c30;opacity:.4;z-index:2`);
       add(`<div></div>`, "left:0;top:494px;width:690px;height:22px;background:repeating-linear-gradient(90deg,#333 0 24px,#444 24px 48px);border-top:4px solid #111;z-index:3");
       const king = pic(R2, 775, 300, 185, "z-index:10");
       const cnt = label("規格外 0", "right:16px;top:14px;font-size:22px"), box = add(`<div><div style="left:0;right:0;top:34px;text-align:center;font-size:17px;color:${INK}">規格外</div></div>`, "left:12px;top:424px;width:90px;height:72px;background:#c9975c;border:4px solid #331c16;z-index:11");
@@ -3033,7 +3021,7 @@ Object.assign(scenes, {
 
     // ---------- T42-07 分け前は穴だけ ----------
     async i_T42_07() {
-      layer(`background:linear-gradient(#232a40,#232a40 80%,#3a4160 80%);z-index:2`);
+      layer(`background:#161c34;opacity:.25;z-index:2`);
       const king = pic(R2, 775, 300, 185, "z-index:10");
       const wal = add(`<div>👛</div>`, "left:680px;top:412px;font-size:72px;z-index:12;transform-origin:50% 100%");
       add(`<svg viewBox="0 0 960 540"><path d="M60 150H730V420" fill=none stroke=#aab6d8 stroke-width=34 stroke-linecap=round stroke-linejoin=round opacity=.55 /><path d="M60 150H730V420" fill=none stroke=#556 stroke-width=4 transform="translate(0,-17)" opacity=0 /></svg>`, "left:0;top:0;width:960px;height:540px;z-index:6");
@@ -3067,7 +3055,7 @@ Object.assign(scenes, {
 
     // ---------- T42-09 本物はどれだ ----------
     async i_T42_09() {
-      layer(`background:linear-gradient(#3a3350,#3a3350 72%,#554a68 72%);z-index:2`);
+      layer(`background:#2a2440;opacity:.25;z-index:2`);
       const xs = [30, 160, 290, 420, 550], ns = [85, 86, 87, 88, 89], cl = xs.map((x, i) => clone(x, 388, 110, ns[i]));
       const void_ = add(`<div></div>`, "left:790px;top:330px;width:140px;height:80px;border-radius:50%;background:#1c1210;z-index:9");
       const kt = pic(R2, 770, 310, 185, "z-index:10;clip-path:inset(0 0 60% 0);transform-origin:50% 40%"), kb = pic(R2, 770, 310, 185, "z-index:10;clip-path:inset(40% 0 0 0)");
@@ -3098,12 +3086,12 @@ Object.assign(scenes, {
 
     // ---------- T43-06 負けは箱に隠す ----------
     async i_T43_06() {
-      layer(`z-index:2;background:linear-gradient(#e8d9b0,#e8d9b0 74%,#b8b67a 74%)`);
-      add(`<div></div>`, "left:30px;top:60px;width:400px;height:350px;background:#7a4a28;border:5px solid #331c16;z-index:3");
-      add(`<div></div>`, "left:40px;top:70px;width:380px;height:330px;background:#d9c9a0;border:3px solid #331c16;z-index:4");
+      layer(`top:510px;height:30px;background:#b8b67a;opacity:.8;z-index:2`);
+      add(`<div></div>`, "left:30px;top:60px;width:400px;height:350px;background:#7a4a28;opacity:.8;border:5px solid #331c16;z-index:3");
+      add(`<div></div>`, "left:40px;top:70px;width:380px;height:330px;background:#d9c9a0;opacity:.75;border:3px solid #331c16;z-index:4");
       add(`<div></div>`, "left:40px;top:238px;width:380px;height:10px;background:#9a7040;z-index:5");
-      const dl = add(`<div><div style="left:160px;top:150px;width:12px;height:36px;background:#7a4a28"></div></div>`, "left:40px;top:70px;width:190px;height:330px;background:#f1ead6;border:4px solid #7a4a28;z-index:9");
-      const dr = add(`<div><div style="left:18px;top:150px;width:12px;height:36px;background:#7a4a28"></div></div>`, "left:230px;top:70px;width:190px;height:330px;background:#f4eddb;border:4px solid #7a4a28;z-index:10");
+      const dl = add(`<div><div style="left:160px;top:150px;width:12px;height:36px;background:#7a4a28"></div></div>`, "left:40px;top:70px;width:190px;height:330px;background:#f1ead6e0;border:4px solid #7a4a28;z-index:9");
+      const dr = add(`<div><div style="left:18px;top:150px;width:12px;height:36px;background:#7a4a28"></div></div>`, "left:230px;top:70px;width:190px;height:330px;background:#f4eddbe0;border:4px solid #7a4a28;z-index:10");
       const h = ham(N); const fr = ov(h, frown);
       const card = add(`<div>敗北</div>`, `left:520px;top:250px;width:140px;height:74px;background:#fff;border:4px solid ${INK};color:#d3202a;font-size:48px;line-height:66px;text-align:center;rotate:-6deg;z-index:15`);
       const box = add(`<div><div style="left:0;right:0;top:34px;text-align:center;font-size:15px;color:${INK}">観測しない</div></div>`, "left:490px;top:420px;width:130px;height:76px;background:#c9975c;border:4px solid #331c16;z-index:12");
@@ -3143,15 +3131,15 @@ Object.assign(scenes, {
 
     // ---------- T44-02 赤ランプにテープ ----------
     async i_T44_02() {
-      layer(`background:linear-gradient(#1c2540,#1c2540 80%,#2a2f4a 80%);z-index:2`);
-      const scr = add(`<div></div>`, "left:230px;top:50px;width:500px;height:290px;border:10px solid #667;border-radius:14px;overflow:hidden;background:linear-gradient(#2a1630,#7a3a2e 60%,#5a2e22 60%);z-index:8");
+      layer(`background:#101830;opacity:.2;z-index:2`);
+      const scr = add(`<div></div>`, "left:250px;top:50px;zoom:.8;width:500px;height:290px;border:10px solid #667;border-radius:14px;overflow:hidden;background:linear-gradient(#2a1630,#7a3a2e 60%,#5a2e22 60%);z-index:8");
       add(`<div>打ち上げから 32年</div>`, "left:10px;top:8px;font-size:18px;background:#000a;padding:2px 10px;border-radius:6px;white-space:nowrap;z-index:6", scr);
       const lamp = add(`<div></div>`, "left:790px;top:64px;width:76px;height:76px;border-radius:50%;background:#4a1414;border:6px solid #667;z-index:9");
       add(`<div>通信</div>`, "left:790px;top:146px;width:76px;text-align:center;font-size:18px;z-index:9");
       const pr = probe(190, 66, 120, scr, 3);
       const rock = add(`<svg viewBox="0 0 150 110"><path d="M10 100Q0 50 30 30Q60 0 100 14Q140 30 146 100Z" fill=#8a8a96 stroke=${INK} stroke-width=5 /><path d="M40 50Q55 40 70 50M90 40Q100 36 110 44" fill=none stroke=#5a5a66 stroke-width=4 /></svg>`, "left:165px;top:-130px;width:150px;height:110px;z-index:4", scr);
       const noise = add(`<div></div>`, "left:0;top:0;width:100%;height:100%;background:repeating-linear-gradient(#fff6 0 3px,#0006 3px 6px);z-index:7;opacity:0", scr);
-      const ds = add(`<div></div>`, "left:0;top:440px;width:960px;height:100px;background:#3a3f5c;border-top:6px solid #111;z-index:16");
+      const ds = add(`<div></div>`, "left:0;top:485px;width:960px;height:55px;background:#3a3f5c;border-top:6px solid #111;z-index:16");
       const zs = [[120, "sad", "glasses"], [400, "smile", "tie"], [660, "sad", ""]].map(([x, f, a]) => zari(x, 380, 110, { face: f, acc: a, z: 15 }));
       zs[0].style.rotate = "16deg"; zs[2].style.rotate = "-16deg"; zs[1].style.rotate = "10deg";
       const z1 = add(`<div>💤</div>`, "left:130px;top:360px;font-size:30px;z-index:17"), z2 = add(`<div>💤</div>`, "left:700px;top:360px;font-size:30px;z-index:17");
@@ -3176,48 +3164,48 @@ Object.assign(scenes, {
       await anim(pr, [{ transform: "scaleY(.1)" }, { transform: "scaleY(1.2)" }, { transform: "none" }], 400);
       add(`<div>通信 OK</div>`, "left:350px;top:9px;font-size:18px;color:#7dff8a;background:#000a;padding:2px 10px;border-radius:6px;white-space:nowrap;z-index:6", scr);
       lamp.style.background = "#5dff7a"; lamp.style.boxShadow = "0 0 24px #5dff7a";
-      bubble("ただいま", 480, 100, 0);
+      bubble("ただいま", 450, 62, 0);
       anim(pr, [{ rotate: "-12deg" }, { rotate: "12deg" }, { rotate: "-12deg" }], 450, { iterations: 4 });
       await wait(2200);
     },
 
     // ---------- T44-04 流れ星と願い事 ----------
     async i_T44_04() {
-      layer(`background:linear-gradient(#04061a,#101a40);z-index:2`); stars(50, 300);
-      add(`<div></div>`, "left:-110px;top:330px;width:460px;height:460px;border-radius:50%;background:#7a7a86;border:5px solid #331c16;z-index:4");
-      add(`<div></div>`, "left:200px;top:410px;width:60px;height:26px;border-radius:50%;background:#5a5a66;z-index:5");
-      add(`<div></div>`, "left:20px;top:470px;width:80px;height:30px;border-radius:50%;background:#5a5a66;z-index:5");
-      const pr = probe(50, 178, 160, s, 8);
-      add(`<div></div>`, "left:520px;top:0;width:440px;height:540px;background:#1a2236;z-index:6");
-      const win = add(`<div></div>`, "left:560px;top:40px;width:380px;height:300px;border:12px solid #8890a8;background:linear-gradient(#050820,#14204a);overflow:hidden;z-index:7");
-      for (let i = 0; i < 14; i++) add(`<div></div>`, `left:${rnd(0, 350)}px;top:${rnd(0, 270)}px;width:3px;height:3px;border-radius:50%;background:#fff;opacity:${rnd(.4, 1)}`, win);
-      const zs = [640, 790].map(x => zari(x, 400, 100, { face: "sad", z: 12 }));
-      add(`<div></div>`, "left:520px;top:490px;width:440px;height:60px;background:#3a3f5c;border-top:6px solid #111;z-index:14");
+      
+      add(`<div></div>`, "left:640px;top:470px;width:360px;height:360px;border-radius:50%;background:#7a7a86;border:5px solid #331c16;z-index:4");
+      add(`<div></div>`, "left:700px;top:490px;width:50px;height:22px;border-radius:50%;background:#5a5a66;z-index:5");
+      add(`<div></div>`, "left:860px;top:495px;width:70px;height:26px;border-radius:50%;background:#5a5a66;z-index:5");
+      const pr = probe(770, 305, 150, s, 8);
+      add(`<div></div>`, "left:20px;top:388px;width:400px;height:30px;background:#3a3f5c;border-top:5px solid #111;z-index:14");
+      const win = add(`<div></div>`, "left:40px;top:66px;width:340px;height:210px;border:12px solid #8890a8;background:linear-gradient(#050820,#14204a);overflow:hidden;z-index:7");
+      for (let i = 0; i < 14; i++) add(`<div></div>`, `left:${rnd(0, 320)}px;top:${rnd(0, 180)}px;width:3px;height:3px;border-radius:50%;background:#fff;opacity:${rnd(.4, 1)}`, win);
+      const zs = [80, 200].map(x => zari(x, 292, 100, { face: "sad", z: 12 }));
+      add(`<div></div>`, "left:0;top:0;width:1px;height:1px");
       await wait(1000); chip("ウルトを発動");
       anim(pr, [{ transform: "none" }, { transform: "scale(1.1,.9)" }, { transform: "none" }], 400, { iterations: 2 });
       pr.style.filter = "drop-shadow(0 0 16px gold)";
-      say("全力ウルト！", 260, 120, { size: 50, color: "#fff", ms: 1100 }); await wait(1100);
-      const sx = 150, sy = 255, tx = 556, ty = 190, L = Math.hypot(tx - sx, ty - sy), ang = Math.atan2(ty - sy, tx - sx) * 180 / Math.PI;
+      say("全力ウルト！", 560, 420, { size: 50, color: "#fff", ms: 1100 }); await wait(1100);
+      const sx = 770, sy = 350, tx = 392, ty = 186, L = Math.hypot(tx - sx, ty - sy), ang = Math.atan2(ty - sy, tx - sx) * 180 / Math.PI;
       const bm = add(`<div></div>`, `left:${sx}px;top:${sy - 9}px;width:${L}px;height:18px;border-radius:9px;background:linear-gradient(90deg,#fff,#ffe066,#ffd23c);box-shadow:0 0 22px #ffd23c;transform-origin:0 50%;rotate:${ang}deg;z-index:9`);
       await anim(bm, [{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], 550, { easing: "ease-in" });
       await wait(250); await anim(bm, [{ opacity: 1 }, { opacity: 0 }], 250); bm.remove(); pr.style.filter = "none";
-      const mt = add(`<div></div>`, "left:20px;top:20px;width:140px;height:8px;border-radius:4px;background:linear-gradient(90deg,#0000,#ffe066,#fff);box-shadow:0 0 14px #ffd23c;rotate:35deg;z-index:5", win);
-      anim(mt, [{ transform: "translate(0,0)" }, { transform: "translate(300px,200px)" }], 1300, { easing: "linear" });
+      const mt = add(`<div></div>`, "left:10px;top:10px;width:120px;height:8px;border-radius:4px;background:linear-gradient(90deg,#0000,#ffe066,#fff);box-shadow:0 0 14px #ffd23c;rotate:35deg;z-index:5", win);
+      anim(mt, [{ transform: "translate(0,0)" }, { transform: "translate(260px,150px)" }], 1300, { easing: "linear" });
       await wait(300); zs.forEach(z => { z.innerHTML = zariSvg({ face: "shock" }); hop(z, 20); });
-      bubble("流れ星だ！", 740, 346, 900); await wait(900);
-      const hands = zs.map(z => add(`<div>🙏</div>`, `left:${parseFloat(z.style.left) + 30}px;top:372px;font-size:34px;z-index:13`));
-      for (let i = 1; i <= 3; i++) { bubble(`${["①", "②", "③"][i - 1]} 給料が上がりますように`, 780, 330, 520); await wait(600); }
+      bubble("流れ星だ！", 210, 428, 900); await wait(900);
+      const hands = zs.map(z => add(`<div>🙏</div>`, `left:${parseFloat(z.style.left) + 30}px;top:262px;font-size:34px;z-index:13`));
+      for (let i = 1; i <= 3; i++) { bubble(`${["①", "②", "③"][i - 1]} 給料が上がりますように`, 210, 428, 520); await wait(600); }
       mt.remove(); await wait(300);
-      say("ただの星", 740, 270, { size: 44, color: "#9db4d8", ms: 0 });
-      await wait(700); bubble("届いた…？", 150, 100, 0);
+      say("ただの星", 210, 170, { size: 44, color: "#9db4d8", ms: 0 });
+      await wait(700); bubble("届いた…？", 820, 245, 0);
       label("ウルト → 流れ星 1個ぶん", "left:30px;top:480px;font-size:22px;z-index:20");
       await wait(2300);
     },
 
     // ---------- T44-07 小包は解雇通知 ----------
     async i_T44_07() {
-      layer(`background:linear-gradient(#14081e,#4a1e34 70%);z-index:2`); stars(40, 300);
-      layer(`top:495px;height:45px;background:#8a4a30;z-index:3`);
+      layer(`background:#14081e;opacity:.2;z-index:2`);
+      layer(`top:495px;height:45px;background:#8a4a30;opacity:.85;z-index:3`);
       add(`<div></div>`, "left:80px;top:472px;width:120px;height:40px;border-radius:50%;background:#6a3a28;z-index:4");
       const pr = probe(600, 290, 190, s, 10);
       const coin = add(`<div class=c>¥</div>`, "left:410px;top:-60px;width:60px;height:60px;line-height:50px;font-size:34px;z-index:20");
@@ -3322,7 +3310,7 @@ const qFilm = (x, y, w, i, parent = s) => { const e = add(`<div></div>`, `left:$
     .innerHTML = `<img src="${N}" style="left:${-(i % 3) * 8}px;top:${-(i % 2) * 8}px;width:${w + 10}px;height:${(w + 10) * 1271 / 1237}px">`;
   return e; };
 const qMarket = () => { const S = [];
-  S.push(layer("z-index:3;background:linear-gradient(#f3c27a,#e29a52 62%,#7a5232 62%)"));
+  S.push(layer("z-index:3;background:linear-gradient(transparent 81%,#7a5232dd 81%)"));
   S.push(add(`<div>🏮</div>`, "left:420px;top:60px;font-size:50px;z-index:4"), add(`<div>🏮</div>`, "left:560px;top:80px;font-size:44px;z-index:4"));
   return S; };
 const qStall = (x, w, title, sub, S) => {
@@ -3333,11 +3321,11 @@ const qStall = (x, w, title, sub, S) => {
 
 // 営業先 (ドーム→屋上→公民館→ベンチ)
 const qVenue = (k, n) => { const S = [], A = (h, c) => { const e = add(h, c); S.push(e); return e; };
-  const base = bg => A(`<div></div>`, `left:0;top:0;width:960px;height:540px;z-index:2;background:${bg}`);
+  const base = bg => A(`<div></div>`, `left:0;top:0;width:960px;height:540px;z-index:2;background:${bg.includes("#150b30") ? "#15082a22" : "none"}`);
   const names = ["ドーム公演", "デパート屋上", "公民館", "公園のベンチ"];
   if (k == 0) { base("linear-gradient(#150b30,#3b1a5a 60%,#241040)");
     for (const [x, r] of [[140, -14], [420, 8], [700, -6]]) A(`<div></div>`, `left:${x}px;top:0;width:200px;height:420px;background:linear-gradient(#fff6b0aa,#fff6b000);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);transform-origin:50% 0;rotate:${r}deg;z-index:3`);
-    A(`<div></div>`, "left:0;top:150px;width:960px;height:200px;z-index:3;opacity:.8;background:radial-gradient(circle,#ff7ab8 3px,transparent 4px) 0 0/18px 14px,radial-gradient(circle,#7ad7ff 3px,transparent 4px) 9px 7px/18px 14px");
+    A(`<div></div>`, "left:0;top:150px;width:960px;height:200px;z-index:3;opacity:.45;background:radial-gradient(circle,#ff7ab8 3px,transparent 4px) 0 0/18px 14px,radial-gradient(circle,#7ad7ff 3px,transparent 4px) 9px 7px/18px 14px");
     A(`<div class=t>ハム 全国ドームツアー</div>`, "left:40px;top:76px;font-size:34px;color:#ffe066;z-index:5;-webkit-text-stroke:6px #2a0a40");
     A(`<div></div>`, "left:0;top:440px;width:960px;height:100px;background:#1a1226;border-top:5px solid #ff7ab8;z-index:4"); }
   if (k == 1) { base("linear-gradient(#8fd3ff,#e0f4ff)");
@@ -3367,7 +3355,7 @@ const qGagTxt = "ぱんぱんぱーん!";
 Object.assign(scenes, {
   async i_T46_05() { // 死亡演技賞
     const h = ham(N), S = [], A = (html, css, p) => { const e = add(html, css, p); S.push(e); return e; };
-    A(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:3;background:radial-gradient(ellipse at 50% 30%,#3a1d4a,#12081c 75%)");
+    A(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:3;background:radial-gradient(ellipse at 50% 30%,#3a1d4a55,#12081c88 85%)");
     A(`<div></div>`, `left:0;top:0;width:960px;height:62px;background:repeating-linear-gradient(90deg,#b3162a 0 36px,#8d0f20 36px 72px);border-bottom:6px solid #ffd23c;z-index:5`);
     A(`<div class=t>第1回 ザリガニ映画祭</div>`, "left:50%;top:10px;translate:-50% 0;font-size:30px;color:#ffe066;z-index:6;-webkit-text-stroke:5px #4a0010");
     A(`<div></div>`, "left:0;top:470px;width:960px;height:70px;background:linear-gradient(#7a4a24,#4a2a12);z-index:4");
