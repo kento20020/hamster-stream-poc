@@ -1,6 +1,166 @@
 // 配信ハム PoC: 胸の前のボードで演出を紹介する見本のうち、ハムの絵柄に合わせた5パターン (M12〜M16)。
 // menu.js が出している window.MK (演出の一覧、chestBoard など) を使う。まとまりごとに { } で囲んでいる。
 
+// M12 黒板とチョーク: 胸の前の小さな黒板に、チョークで1行ずつ書いていく。次へ行く前に黒板消しでこすって消す
+{
+const { MENU, pr, pw, cname, cue, chestBoard } = MK;
+let chalkFonts; // フォントの読み込み待ちは最初の1周だけ
+Object.assign(scenes, {
+  async m_chalk() {
+    const { bd, BW, BH, raise, lower, bob } = chestBoard(), S = 3;
+    const IX = 12, IY = 12, IW = BW - 24, IH = 110; // 緑の面 (下の枠は太めにしてチョーク置きにする)
+    const FONT = fs => `600 ${fs}px "Klee One","Yomogi",sans-serif`;
+    const plain = h => { const d = document.createElement("div"); d.innerHTML = h; return d.textContent; };
+    const price = it => plain(it.cur === "b" ? pr(it) : pw(it)); // ◆50 / 100pt
+    chalkFonts ??= (async () => { const l = document.getElementById("mfont");
+      if (l && !l.sheet) await Promise.race([new Promise(r => l.addEventListener("load", r, { once: true })), wait(1500)]);
+      await Promise.race([document.fonts.load(FONT(32), MENU.map(it => it.name + cname(it) + price(it)).join("")), wait(2000)]); })().catch(() => {});
+    cue("見本: 黒板にチョークで書いていく（本番は9秒ごと）");
+    bd.style.cssText += ";border-radius:14px;box-shadow:0 5px 10px #0005";
+
+    // ---- canvas の道具 (3倍の解像度で描く) ----
+    const cv = () => { const c = document.createElement("canvas"); c.width = BW * S; c.height = BH * S; const x = c.getContext("2d"); x.scale(S, S); return [c, x]; };
+    const show = (c, z, css = "") => { c.style.cssText = `left:0;top:0;width:${BW}px;height:${BH}px;z-index:${z};${css}`; bd.append(c); return c; };
+    const rr = (x, a, b, w, h, r) => { x.beginPath(); x.roundRect(a, b, w, h, r); };
+    const tween = (ms, fn) => new Promise(res => { const t0 = performance.now();
+      const step = now => { const p = Math.min(1, (now - t0) / ms); fn(p); p < 1 ? requestAnimationFrame(step) : res(); }; requestAnimationFrame(step); });
+
+    // ---- 黒板 (木の枠 + やわらかい深緑 + 消した跡のもや + チョーク置き) ----
+    const [base, b] = cv();
+    const wg = b.createLinearGradient(0, 0, 0, BH); wg.addColorStop(0, "#f3cc93"); wg.addColorStop(1, "#e1ab68");
+    rr(b, 2.5, 2.5, BW - 5, BH - 5, 14); b.fillStyle = wg; b.fill();
+    b.save(); b.clip(); b.strokeStyle = "#c08549"; b.lineWidth = 1; b.globalAlpha = .5; // 木目
+    const grainH = y => { b.beginPath(); b.moveTo(0, y); for (let x = 0; x < BW; x += 19) b.quadraticCurveTo(x + 9, y + rnd(-1.3, 1.3), x + 19, y); b.stroke(); };
+    const grainV = x => { b.beginPath(); b.moveTo(x, 0); for (let y = 0; y < BH; y += 17) b.quadraticCurveTo(x + rnd(-1.2, 1.2), y + 8, x, y + 17); b.stroke(); };
+    [6.5, 9, 127.5, 133, 137].forEach(grainH); [6.5, 9, BW - 6.5, BW - 9].forEach(grainV); b.restore();
+    b.lineWidth = 4.5; b.strokeStyle = INK; rr(b, 2.5, 2.5, BW - 5, BH - 5, 14); b.stroke();
+    const gg = b.createRadialGradient(BW * .45, BH * .36, 8, BW / 2, BH / 2, BW * .62); gg.addColorStop(0, "#3f735b"); gg.addColorStop(1, "#2b5544");
+    rr(b, IX, IY, IW, IH, 7); b.fillStyle = gg; b.fill();
+    b.save(); b.clip(); b.fillStyle = b.strokeStyle = "#fff";
+    for (const [x, y, rx, ry, a, al] of [[62, 38, 48, 11, -.12, .07], [168, 96, 50, 13, .08, .06], [118, 66, 74, 22, 0, .035], [44, 104, 30, 9, .25, .06], [190, 30, 26, 8, -.3, .05]]) {
+      b.globalAlpha = al; b.filter = `blur(${4 * S}px)`; b.beginPath(); b.ellipse(x, y, rx, ry, a, 0, 7); b.fill(); }
+    b.filter = `blur(${1.6 * S}px)`; b.lineWidth = 7; b.globalAlpha = .045; // 黒板消しの弧の跡
+    for (const [x, y, r, a0, a1] of [[90, 120, 70, 3.6, 4.6], [150, 20, 64, .5, 1.5], [40, 50, 40, 5.2, 6.4]]) { b.beginPath(); b.arc(x, y, r, a0, a1); b.stroke(); }
+    b.restore();
+    b.lineWidth = 3; b.strokeStyle = INK; rr(b, IX, IY, IW, IH, 7); b.stroke();
+    b.globalAlpha = .55; b.strokeStyle = "#a8723c"; b.lineWidth = 1.4; b.beginPath(); b.moveTo(16, 129.5); b.lineTo(BW - 16, 129.5); b.stroke(); b.globalAlpha = 1;
+    const trayStick = (x, y, w, col) => { rr(b, x, y, w, 6.5, 3.2); b.fillStyle = col; b.fill(); b.lineWidth = 2; b.strokeStyle = INK; b.stroke(); };
+    trayStick(138, 126.5, 25, "#f7f4ec"); trayStick(170, 127, 14, "#f6d86a");
+    b.fillStyle = "#fff"; for (let i = 0; i < 16; i++) { b.globalAlpha = rnd(.3, .7); b.beginPath(); b.arc(rnd(110, 205), rnd(133.5, 136), rnd(.4, .9), 0, 7); b.fill(); } b.globalAlpha = 1;
+    const [cBg, bgc] = cv(); bgc.drawImage(base, 0, 0, BW, BH); show(cBg, 1);
+    const [cTx, tc] = cv(); show(cTx, 2); // 書き終わった文字はここに焼き込む (黒板消しはここを消す)
+
+    // 黒板の表面のざらつき。チョークの線から点や短い筋を抜いて、かすれを出す
+    const grain = document.createElement("canvas"); grain.width = BW * S; grain.height = BH * S;
+    { const g = grain.getContext("2d"), W = grain.width, H = grain.height;
+      for (let i = 0; i < 7000; i++) { g.fillStyle = `rgba(0,0,0,${rnd(.4, 1)})`; const r = rnd(.8, 2.2); g.fillRect(rnd(0, W), rnd(0, H), r * 1.5, r); }
+      g.lineCap = "round"; for (let i = 0; i < 1300; i++) { const x = rnd(0, W), y = rnd(0, H), l = rnd(3, 9), a = rnd(-.55, -.2);
+        g.strokeStyle = `rgba(0,0,0,${rnd(.35, .85)})`; g.lineWidth = rnd(.8, 1.6); g.beginPath(); g.moveTo(x, y); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke(); } }
+    // 白で描いた形を、チョークの色・粉っぽい縁・かすれにする
+    const chalk = (draw, col) => {
+      const [m, mx] = cv(); mx.fillStyle = mx.strokeStyle = "#fff"; mx.lineJoin = mx.lineCap = "round"; draw(mx);
+      const o = document.createElement("canvas"); o.width = m.width; o.height = m.height; const ox = o.getContext("2d");
+      ox.globalAlpha = .45; ox.filter = `blur(${.9 * S}px)`; ox.drawImage(m, 0, 0); ox.filter = "none";
+      for (let i = 0; i < 5; i++) { ox.globalAlpha = .13; ox.drawImage(m, rnd(-2.6, 2.6), rnd(-2.6, 2.6)); }
+      ox.globalAlpha = .93; ox.drawImage(m, 0, 0); ox.globalAlpha = 1;
+      ox.globalCompositeOperation = "source-in"; ox.fillStyle = col; ox.fillRect(0, 0, o.width, o.height);
+      ox.globalCompositeOperation = "destination-out"; ox.drawImage(grain, 0, 0); ox.globalCompositeOperation = "source-over";
+      return o; };
+    const text = (x, t, px, py, fs, align = "left", bold = .05) => { x.font = FONT(fs); x.textAlign = align; x.textBaseline = "middle"; x.lineWidth = fs * bold; x.strokeText(t, px, py); x.fillText(t, px, py); };
+    const wob = (x, ax, ay, bx2, by2) => { x.moveTo(ax, ay); x.quadraticCurveTo((ax + bx2) / 2 + rnd(-.9, .9), (ay + by2) / 2 + rnd(-.9, .9), bx2, by2); };
+    const [, me] = cv(); const width = (t, fs) => { me.font = FONT(fs); return me.measureText(t).width; };
+    const cols = (t, x0, fs) => [...Array(t.length + 1)].map((_, k) => x0 + width(t.slice(0, k), fs)); // 1文字ずつの区切り
+
+    // 1つの演出を、書く順のかたまり (札 → 値段 → 名前 → 下線 → 星) に分ける
+    const pieces = it => {
+      const cc = it.cur === "b" ? "#cdb0ff" : "#ffb36a", YEL = "#fae17a", WHT = "#f7f4ec";
+      const tt = cname(it), tfs = 15, tw = width(tt, tfs) + 14, tx = 20, ty = 22, th = 24, rowY = ty + th / 2 + 1;
+      const pt = price(it), pfs = 26, px = tx + tw + 9, pend = px + width(pt, pfs);
+      let nfs = 35; while (width(it.name, nfs) > IW - 16 && nfs > 12) nfs--;
+      const nw = width(it.name, nfs), nx = BW / 2 - nw / 2, ny = 80;
+      const uy = ny + nfs * .62, u0 = nx - 3, u1 = nx + nw + 3, wave = x => uy + Math.sin((x - u0) / 6.5) * 1.6;
+      const sx = BW - 26, sy = rowY, star = pend + 10 < sx - 7; // 値段が長くて窮屈なら星は描かない
+      return [
+        { col: cc, ms: 140, xs: [tx - 3, tx + tw + 3], cy: rowY, amp: th * .5, draw: x => { x.lineWidth = 1.9; x.beginPath();
+          wob(x, tx - 2.5, ty, tx + tw + 2.5, ty + .6); wob(x, tx + tw, ty - 2.5, tx + tw + .6, ty + th + 2.5);
+          wob(x, tx + tw + 2.5, ty + th, tx - 2.5, ty + th - .5); wob(x, tx, ty + th + 2.5, tx - .5, ty - 2.5); x.stroke();
+          text(x, tt, tx + tw / 2, rowY, tfs, "center", .09); } },
+        { col: YEL, ms: 34 * pt.length, xs: cols(pt, px, pfs), cy: rowY, amp: pfs * .3, draw: x => text(x, pt, px, rowY + .5, pfs) },
+        { col: WHT, ms: 44 * it.name.length, xs: cols(it.name, nx, nfs), cy: ny, amp: nfs * .3, draw: x => text(x, it.name, nx, ny, nfs) },
+        { col: cc, ms: 85, xs: [u0 - 2, u1 + 2], yf: wave, draw: x => { x.lineWidth = 2.3; x.beginPath(); x.moveTo(u0, wave(u0)); for (let xx = u0; xx <= u1; xx += 2) x.lineTo(xx, wave(xx)); x.stroke(); } },
+      ].concat(star ? [{ col: YEL, ms: 55, xs: [sx - 8, sx + 8], cy: sy, amp: 6, draw: x => { x.lineWidth = 1.7; x.beginPath();
+          for (let i = 0; i <= 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5 + .12, r = i % 2 ? 2.9 : 7.2; x[i ? "lineTo" : "moveTo"](sx + Math.cos(a) * r, sy + Math.sin(a) * r); } x.stroke(); } }] : []);
+    };
+
+    // ---- 書いているチョーク (短い棒) と、舞う粉 ----
+    const stick = add(`<div><svg viewBox="0 0 28 9" style="left:0;top:0;width:28px;height:9px;overflow:visible"><rect x=1 y=1 width=26 height=7 rx=3.5 fill=#f7f4ec stroke=${INK} stroke-width=2 /><path d="M9 3.3H23" stroke=#fff9 stroke-width=1.4 stroke-linecap=round /></svg></div>`,
+      "left:0;top:0;width:28px;height:9px;transform-origin:0 50%;z-index:6;opacity:0", bd);
+    let kx = 0, ky = 0; const place = (x, y) => { kx = x; ky = y; stick.style.transform = `translate(${x}px,${y - 4.5}px) rotate(-56deg)`; };
+    const dust = (x, y, col, fall = 16) => { const puff = Math.random() < .2, r = puff ? rnd(4, 7) : rnd(1.6, 3), d = add(`<i></i>`, `left:${x - r / 2}px;top:${y - r / 2}px;width:${r}px;height:${r}px;border-radius:50%;background:${col};z-index:7${puff ? ";filter:blur(1.5px)" : ""}`, bd);
+      anim(d, [{ transform: "none", opacity: puff ? .45 : .95 }, { transform: `translate(${rnd(-8, 8)}px,${rnd(fall * .4, fall)}px) scale(${puff ? 1.8 : 1})`, opacity: 0 }], rnd(450, 800)).then(() => d.remove()); }; // 粉 (ときどき、ふわっと広がる煙)
+    // かたまりごとに「チョークを運ぶ → 左から右へ書く」を1本の時間軸にして動かす
+    const write = async (it, erased) => {
+      const ps = pieces(it); let t = 0, cur = -1, fx = 0, fy = 0;
+      ps.forEach((pc, i) => { pc.el = show(chalk(pc.draw, pc.col), 3, `clip-path:inset(0 ${BW}px 0 0)`); pc.mv = i ? 32 : 65; pc.t0 = t; t += pc.mv + pc.ms; pc.t2 = t; });
+      const tipY = (pc, x) => pc.yf ? pc.yf(x) : pc.cy;
+      await tween(t, p => { const now = p * t, pc = ps.find(q => now < q.t2) ?? ps[ps.length - 1], i = ps.indexOf(pc);
+        while (cur < i) { if (cur >= 0) ps[cur].el.style.clipPath = "none"; cur++; fx = kx; fy = ky; stick.querySelector("rect").setAttribute("fill", ps[cur].col); }
+        const x1 = pc.xs[0], y1 = tipY(pc, x1), tm = now - pc.t0;
+        if (tm < pc.mv) { const q = tm / pc.mv;
+          if (i === 0) { place(x1 + 18 * (1 - q), y1 - 22 * (1 - q)); stick.style.opacity = q; } // 手に取って黒板へ
+          else place(fx + (x1 - fx) * q, fy + (y1 - fy) * q - 6 * Math.sin(Math.PI * q));
+          return; }
+        const n = pc.xs.length - 1, f = Math.min(1, (tm - pc.mv) / pc.ms) * n, k = Math.min(n - 1, Math.floor(f)), fr = f - k, e = pc.xs[k] + (pc.xs[k + 1] - pc.xs[k]) * fr;
+        place(e, pc.yf ? pc.yf(e) : pc.cy + pc.amp * .8 * Math.sin(fr * Math.PI * 4)); // 書くときの小さな上下
+        pc.el.style.clipPath = `inset(0 ${Math.max(0, BW - e)}px 0 0)`; if (Math.random() < .6) dust(kx, ky, pc.col); });
+      ps.forEach(pc => pc.el.style.clipPath = "none");
+      const lx = kx, ly = ky; tween(160, p => { place(lx + 22 * p, ly - 26 * p); stick.style.opacity = 1 - p; }); // チョークを置きに行く
+      await erased; // 前の黒板消しが終わってから焼き込む
+      for (const pc of ps) { tc.drawImage(pc.el, 0, 0, BW, BH); pc.el.remove(); }
+    };
+
+    // ---- 黒板消し: 上の段から左右に往復してこすり、うっすら跡を残す ----
+    const ers = add(`<div><svg viewBox="0 0 64 40" style="left:0;top:0;width:64px;height:40px;overflow:visible">
+      <rect x=5 y=20 width=54 height=17 rx=3 fill=#f2e8d6 stroke=${INK} stroke-width=3 /><path d="M8 26.5H56M8 31.5H56" stroke=#bcae99 stroke-width=2 />
+      <rect x=3 y=3 width=58 height=19 rx=6 fill=#8fb7d6 stroke=${INK} stroke-width=3 /><path d="M12 9.5H30" stroke=#ffffffa0 stroke-width=3 stroke-linecap=round /></svg></div>`,
+      "left:0;top:0;width:64px;height:40px;z-index:8;opacity:0", bd);
+    const placeE = (x, y, r) => ers.style.transform = `translate(${x - 32}px,${y - 20}px) rotate(${r}deg)`;
+    const ROWS = [29, 67, 105], XL = 44, XR = BW - 44;
+    const PATH = [[XR, ROWS[0]], [XL, ROWS[0]], [XL, ROWS[1]], [XR, ROWS[1]], [XR, ROWS[2]], [XL, ROWS[2]]];
+    const SEG = PATH.slice(1).map((q, i) => Math.hypot(q[0] - PATH[i][0], q[1] - PATH[i][1])), LEN = SEG.reduce((a, v) => a + v);
+    const along = d => { for (let i = 0; i < SEG.length; i++) { if (d <= SEG[i] || i === SEG.length - 1) { const t = Math.min(1, d / SEG[i]), [ax, ay] = PATH[i], [qx, qy] = PATH[i + 1];
+      return [ax + (qx - ax) * t, ay + (qy - ay) * t, Math.sign(qx - ax)]; } d -= SEG[i]; } };
+    let ghost; // 消したあとの黒板 (元の黒板 + うっすら残る文字の跡)
+    const makeGhost = () => { const [g, gx] = cv(); gx.drawImage(base, 0, 0, BW, BH); gx.save(); rr(gx, IX, IY, IW, IH, 7); gx.clip();
+      gx.filter = `blur(${1.4 * S}px)`; for (const dx of [-10, -6, -2, 2, 6, 10]) { gx.globalAlpha = .032; gx.drawImage(cTx, dx, rnd(-1.5, 1.5), BW, BH); }
+      gx.filter = `blur(${5 * S}px)`; gx.globalAlpha = .035; gx.fillStyle = "#fff"; for (const y of ROWS) { rr(gx, IX + 8, y - 12, IW - 16, 24, 12); gx.fill(); }
+      gx.restore(); return g; };
+    const wipeAt = (x, y) => { bgc.save(); rr(bgc, x - 31, y - 19, 62, 38, 8); bgc.clip(); bgc.drawImage(ghost, 0, 0, BW, BH); bgc.restore();
+      tc.globalCompositeOperation = "destination-out"; rr(tc, x - 31, y - 19, 62, 38, 8); tc.fill(); tc.globalCompositeOperation = "source-over"; };
+    // 返り値: [一番下の段に入った (上の段はもうきれい), 消し終わった]。次の文字は前者から書きはじめる
+    const erase = () => { let reachRow3; const top = new Promise(r => reachRow3 = r), ROW3 = SEG[0] + SEG[1] + SEG[2] + SEG[3], IN = 60, MS = 360;
+      const done = (async () => {
+        ghost = makeGhost(); let [ex, ey] = PATH[0], wiping = false; bob(4, 440);
+        await tween(IN + MS, p => { const tm = p * (IN + MS);
+          if (tm < IN) { const q = tm / IN; placeE(ex + 10 * (1 - q), ey - 14 * (1 - q), -4); ers.style.opacity = q; return; }
+          if (!wiping) { wiping = true; ers.style.opacity = 1; wipeAt(ex, ey); }
+          const q = (tm - IN) / MS, d = (1 - Math.cos(Math.PI * q)) / 2 * LEN, [x, y, dir] = along(d), n = Math.ceil(Math.hypot(x - ex, y - ey) / 5);
+          for (let i = 1; i <= n; i++) wipeAt(ex + (x - ex) * i / n, ey + (y - ey) * i / n);
+          placeE(x, y, dir * 5); ex = x; ey = y; if (Math.random() < .8) dust(x + rnd(-26, 26), y + 19, "#f1eee4", 26);
+          if (d >= ROW3) reachRow3(); });
+        tc.clearRect(0, 0, BW, BH); bgc.drawImage(ghost, 0, 0, BW, BH); reachRow3();
+        const lx = ex, ly = ey; tween(110, p => { placeE(lx - 8 * p, ly - 18 * p, 0); ers.style.opacity = 1 - p; }); // 持ち上げて去る
+      })();
+      return [top, done]; };
+
+    await raise(); await chalkFonts; await wait(100);
+    let erased = Promise.resolve();
+    for (const it of MENU) { await write(it, erased); await wait(2000); const [top, done] = erase(); erased = done; await top; }
+    await erased; await wait(100); await lower(); await wait(200);
+  },
+});
+}
+
 // スケッチブック: 胸の前でリングとじのスケッチブックを持ち、ページを上にめくって演出を1つずつ紹介する
 // クリーム色の画用紙に太いマーカーで手書き。今のページはリングを軸に上へめくれて裏へ回り、下から次のページが出る
 {
