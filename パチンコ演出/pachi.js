@@ -43,58 +43,61 @@ document.head.insertAdjacentHTML("beforeend", `<style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #s{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;color:#fff;background:#171d2c url(../配信ギミック/ow_bg.png) center/cover;
  font:900 28px "Yu Gothic","Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;user-select:none;-webkit-user-select:none}
-#s *{position:absolute;box-sizing:border-box}
-#s .ham{transform-origin:50% 100%}
-#s .ham div{left:0;top:0;width:100%;height:100%;transform-origin:50% 100%}
-#s .ham img,#s .ham svg{left:0;top:0;width:100%;height:100%;overflow:visible}
-#s .bt{white-space:nowrap;line-height:1.15;translate:-50% -50%;filter:drop-shadow(0 5px 0 #0009)}
-#s .bt>span{position:relative;display:block;color:var(--sc);-webkit-text-stroke:var(--sw) var(--sc);paint-order:stroke fill}
-#s .bt>span+span{position:absolute;left:0;top:0;color:transparent;-webkit-text-stroke:0;background:var(--fill);-webkit-background-clip:text;background-clip:text}
-#s .rbw{background-size:300% 100% !important;animation:rbw 1.2s linear infinite}
+:is(#s,#ov) *{position:absolute;box-sizing:border-box}
+:is(#s,#ov) .ham{transform-origin:50% 100%}
+:is(#s,#ov) .ham div{left:0;top:0;width:100%;height:100%;transform-origin:50% 100%}
+:is(#s,#ov) .ham img,:is(#s,#ov) .ham svg{left:0;top:0;width:100%;height:100%;overflow:visible}
+:is(#s,#ov) .bt{white-space:nowrap;line-height:1.15;translate:-50% -50%;filter:drop-shadow(0 5px 0 #0009)}
+:is(#s,#ov) .bt>span{position:relative;display:block;color:var(--sc);-webkit-text-stroke:var(--sw) var(--sc);paint-order:stroke fill}
+:is(#s,#ov) .bt>span+span{position:absolute;left:0;top:0;color:transparent;-webkit-text-stroke:0;background:var(--fill);-webkit-background-clip:text;background-clip:text}
+:is(#s,#ov) .rbw{background-size:300% 100% !important;animation:rbw 1.2s linear infinite}
 @keyframes rbw{to{background-position:-300% 0}}
-#s .bub{background:#fff;color:#2a1a10;padding:5px 14px;border-radius:16px;font-size:22px;white-space:nowrap;translate:-50% -100%;border:3px solid ${INK};z-index:75}
-#s .bub::after{content:"";position:absolute;left:50%;bottom:-13px;margin-left:-8px;border:8px solid transparent;border-top-color:${INK}}
-#s .wig{animation:wig .09s linear infinite}@keyframes wig{0%,100%{transform:rotate(-5deg) translateX(-3px)}50%{transform:rotate(5deg) translateX(3px)}}
-#s .trem{animation:trem .12s linear infinite}@keyframes trem{50%{transform:translateX(2px)}}
-#s .run{animation:run .15s ease-in-out infinite}@keyframes run{50%{transform:translateY(-9%) rotate(-4deg)}}
-#s .cheer{animation:cheer .38s ease-in-out infinite}@keyframes cheer{50%{transform:translateY(-28%) scale(1.04,.96)}}
-#s .bob{animation:bob .9s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-4%)}}
-#s .pulse{animation:pulse .5s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
-#s .spin{animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-#s .blink{animation:blink 3s infinite}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
-#s .dr{animation:dr .8s linear infinite}@keyframes dr{to{transform:translateY(160px);opacity:0}}
-#s .rbg{background:${RAINBOW};background-size:300% 100%;animation:rbw 1s linear infinite}
-#s .mini{display:flex;align-items:center;gap:4px;padding:4px 6px;background:#000b;border:2px solid #fff8;border-radius:10px}
-#s .mini b,#s .mini i{position:relative}
-#s .mini b{width:34px;height:42px;background:linear-gradient(#fff,#dfe3ee);font-size:32px;line-height:42px;text-align:center;border-radius:6px;-webkit-text-stroke:2px #fff;paint-order:stroke fill}
-#s .mini i{font-style:normal;font-size:15px;color:#ffd23c;margin-right:3px;animation:pulse .5s infinite}
-#s .reel{width:152px;height:196px;border-radius:20px;background:linear-gradient(#fff,#e4e8f2);border:7px solid #2a1650;box-shadow:inset 0 -16px 0 #0000001a,0 10px 0 #0006}
-#s .reel b{left:0;right:0;top:0;text-align:center;font-size:168px;line-height:182px;-webkit-text-stroke:7px #2a0a10;paint-order:stroke fill}
-#s .reel.on{animation:glow .5s ease-in-out infinite alternate}@keyframes glow{to{box-shadow:0 0 34px 10px #fff6a0,0 10px 0 #0006}}
-#s .push{width:120px;height:120px;translate:-50% -50%;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 40% 30%,#ffc2c2,#ff2a2a 45%,#9a0000 82%);border:6px solid #fff;box-shadow:0 0 0 6px #b00000,0 0 34px #ff3030;animation:pulse .45s ease-in-out infinite}
-#s .push span{left:0;right:0;top:38px;text-align:center;font-size:30px;color:#fff;-webkit-text-stroke:5px #600;paint-order:stroke fill}
-#s .push i{inset:-8px;border-radius:50%;border:4px solid #fff;animation:ring 1s ease-out infinite}#s .push i+i{animation-delay:.5s}
+:is(#s,#ov) .bub{background:#fff;color:#2a1a10;padding:5px 14px;border-radius:16px;font-size:22px;white-space:nowrap;translate:-50% -100%;border:3px solid ${INK};z-index:75}
+:is(#s,#ov) .bub::after{content:"";position:absolute;left:50%;bottom:-13px;margin-left:-8px;border:8px solid transparent;border-top-color:${INK}}
+:is(#s,#ov) .wig{animation:wig .09s linear infinite}@keyframes wig{0%,100%{transform:rotate(-5deg) translateX(-3px)}50%{transform:rotate(5deg) translateX(3px)}}
+:is(#s,#ov) .trem{animation:trem .12s linear infinite}@keyframes trem{50%{transform:translateX(2px)}}
+:is(#s,#ov) .run{animation:run .15s ease-in-out infinite}@keyframes run{50%{transform:translateY(-9%) rotate(-4deg)}}
+:is(#s,#ov) .cheer{animation:cheer .38s ease-in-out infinite}@keyframes cheer{50%{transform:translateY(-28%) scale(1.04,.96)}}
+:is(#s,#ov) .bob{animation:bob .9s ease-in-out infinite}@keyframes bob{50%{transform:translateY(-4%)}}
+:is(#s,#ov) .pulse{animation:pulse .5s ease-in-out infinite}@keyframes pulse{50%{transform:scale(1.12);opacity:.7}}
+:is(#s,#ov) .spin{animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+:is(#s,#ov) .blink{animation:blink 3s infinite}@keyframes blink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+:is(#s,#ov) .dr{animation:dr .8s linear infinite}@keyframes dr{to{transform:translateY(160px);opacity:0}}
+:is(#s,#ov) .rbg{background:${RAINBOW};background-size:300% 100%;animation:rbw 1s linear infinite}
+:is(#s,#ov) .mini{display:flex;align-items:center;gap:4px;padding:4px 6px;background:#000b;border:2px solid #fff8;border-radius:10px}
+:is(#s,#ov) .mini b,:is(#s,#ov) .mini i{position:relative}
+:is(#s,#ov) .mini b{width:34px;height:42px;background:linear-gradient(#fff,#dfe3ee);font-size:32px;line-height:42px;text-align:center;border-radius:6px;-webkit-text-stroke:2px #fff;paint-order:stroke fill}
+:is(#s,#ov) .mini i{font-style:normal;font-size:15px;color:#ffd23c;margin-right:3px;animation:pulse .5s infinite}
+:is(#s,#ov) .reel{width:152px;height:196px;border-radius:20px;background:linear-gradient(#fff,#e4e8f2);border:7px solid #2a1650;box-shadow:inset 0 -16px 0 #0000001a,0 10px 0 #0006}
+:is(#s,#ov) .reel b{left:0;right:0;top:0;text-align:center;font-size:168px;line-height:182px;-webkit-text-stroke:7px #2a0a10;paint-order:stroke fill}
+:is(#s,#ov) .reel.on{animation:glow .5s ease-in-out infinite alternate}@keyframes glow{to{box-shadow:0 0 34px 10px #fff6a0,0 10px 0 #0006}}
+:is(#s,#ov) .push{width:120px;height:120px;translate:-50% -50%;border-radius:50%;cursor:pointer;background:radial-gradient(circle at 40% 30%,#ffc2c2,#ff2a2a 45%,#9a0000 82%);border:6px solid #fff;box-shadow:0 0 0 6px #b00000,0 0 34px #ff3030;animation:pulse .45s ease-in-out infinite}
+:is(#s,#ov) .push span{left:0;right:0;top:38px;text-align:center;font-size:30px;color:#fff;-webkit-text-stroke:5px #600;paint-order:stroke fill}
+:is(#s,#ov) .push i{inset:-8px;border-radius:50%;border:4px solid #fff;animation:ring 1s ease-out infinite}:is(#s,#ov) .push i+i{animation-delay:.5s}
 @keyframes ring{from{transform:scale(1);opacity:.9}to{transform:scale(1.9);opacity:0}}
-#s .cut .ln{left:0;top:0;width:100%;height:100%;background:repeating-linear-gradient(90deg,#fff0 0 70px,#fff4 70px 76px);animation:ln .25s linear infinite}@keyframes ln{to{background-position:-76px 0}}
-#s .cnt{padding:5px 14px;background:#000c;border:2px solid #ffd23c;border-radius:12px;font-size:20px;color:#fff;white-space:nowrap}
-#s .cnt b{position:relative;color:#ffd23c;font-size:28px}#s .cnt small,#s .cnt span{position:relative;font-size:16px;color:#ccd}
-:is(#s,#tv) .dbg{position:absolute;width:250px;padding:8px 10px;background:#000d;border:1px solid #6cf;border-radius:8px;font:bold 14px/1.5 Consolas,monospace;color:#cfe}
-:is(#s,#tv) .dbg div{position:relative}:is(#s,#tv) .dbg .bar{height:12px;margin-top:4px;background:#234;border-radius:3px}:is(#s,#tv) .dbg .bar i{position:absolute;top:0;height:100%}
+:is(#s,#ov) .cut .ln{left:0;top:0;width:100%;height:100%;background:repeating-linear-gradient(90deg,#fff0 0 70px,#fff4 70px 76px);animation:ln .25s linear infinite}@keyframes ln{to{background-position:-76px 0}}
+:is(#s,#ov) .cnt{padding:5px 14px;background:#000c;border:2px solid #ffd23c;border-radius:12px;font-size:20px;color:#fff;white-space:nowrap}
+:is(#s,#ov) .cnt b{position:relative;color:#ffd23c;font-size:28px}:is(#s,#ov) .cnt small,:is(#s,#ov) .cnt span{position:relative;font-size:16px;color:#ccd}
+:is(#s,#ov) .dbg{position:absolute;width:250px;padding:8px 10px;background:#000d;border:1px solid #6cf;border-radius:8px;font:bold 14px/1.5 Consolas,monospace;color:#cfe}
+:is(#s,#ov) .dbg div{position:relative}:is(#s,#ov) .dbg .bar{height:12px;margin-top:4px;background:#234;border-radius:3px}:is(#s,#ov) .dbg .bar i{position:absolute;top:0;height:100%}
 /* 小窓版: OW の画面 (#tv) の右下に小窓 (#win)。中身はいつもの 960×540 の舞台 (#s) を縮めたもの */
 #tv{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;background:#171d2c url(../配信ギミック/ow_bg.png) center/cover}
 #win{position:absolute;left:-14px;top:-14px;width:960px;height:540px;transform:scale(${MS});transform-origin:100% 100%;scale:0;opacity:0}
 #win #s{border-radius:30px;background:rgba(14,10,32,.5);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 0 9px #fff,0 0 0 18px #d0103a,0 18px 40px #000c}
 #rest{position:absolute;left:720px;top:304px;width:224px;transform-origin:50% 100%}
-#s .stars{animation:spin .6s linear infinite}#s .stars i{font-style:normal;color:#ffe14d;font-size:30px;-webkit-text-stroke:2px #6a4300;paint-order:stroke fill;translate:-50% -50%}
+#ov{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;pointer-events:none}
+:is(#s,#ov) .stars{animation:spin .6s linear infinite}:is(#s,#ov) .stars i{font-style:normal;color:#ffe14d;font-size:30px;-webkit-text-stroke:2px #6a4300;paint-order:stroke fill;translate:-50% -50%}
 </style>`);
 // 目のフタ用のグラデーション (目の上は灰色、下は白い毛)。ページ全体で1つ
 document.body.insertAdjacentHTML("beforeend", `<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="eyefur" x1="0" y1="0" x2="0" y2="1"><stop offset=".84" stop-color="#bfb8b6"/><stop offset=".84" stop-color="#fbf5e9"/></linearGradient></defs></svg>`);
 const s = document.createElement("div"); s.id = "s";
-const TV = MINI ? document.createElement("div") : null, WIN = MINI ? document.createElement("div") : null, REST = MINI ? document.createElement("img") : null;
-if (MINI) { TV.id = "tv"; WIN.id = "win"; REST.id = "rest"; REST.src = HAM; document.body.append(TV); TV.append(REST, WIN); WIN.append(s); } // ふだんは右下にいつものハム
+const TV = MINI ? document.createElement("div") : null, WIN = MINI ? document.createElement("div") : null, REST = MINI ? document.createElement("img") : null, OV = MINI ? document.createElement("div") : null;
+// 小窓版: ふだんは右下にいつものハム (REST)。小窓 (WIN) の上に、画面全体をおおう透明な層 (OV) を重ね、最後の家族ラッシュだけはそこで走らせる
+if (MINI) { TV.id = "tv"; WIN.id = "win"; REST.id = "rest"; OV.id = "ov"; REST.src = HAM; document.body.append(TV); TV.append(REST, WIN, OV); WIN.append(s); }
 else document.body.append(s);
-let K = 1, KP = 1; // K: 舞台の 1px が画面で何 px か (canvas の細かさに使う)、KP: 舞台を揺らすときの単位
-const fit = () => { const k = Math.min(innerWidth / W, innerHeight / H); (MINI ? TV : s).style.transform = `translate(${(innerWidth - W * k) / 2}px,${(innerHeight - H * k) / 2}px) scale(${k})`; K = MINI ? k * MS : k; KP = MINI ? 1 : k; };
+// K: 舞台の 1px が画面で何 px か、KT: 画面全体の 1px が画面で何 px か (どちらも canvas の細かさに使う)、KP: 舞台を揺らすときの単位
+let K = 1, KT = 1, KP = 1;
+const fit = () => { const k = Math.min(innerWidth / W, innerHeight / H); (MINI ? TV : s).style.transform = `translate(${(innerWidth - W * k) / 2}px,${(innerHeight - H * k) / 2}px) scale(${k})`; K = MINI ? k * MS : k; KT = k; KP = MINI ? 1 : k; };
 addEventListener("resize", fit); fit();
 
 // ===== 小道具 =====
@@ -132,13 +135,13 @@ const bub = (txt, x, y, ms = 1100, o = {}) => {
 // 破片・ほこり・火花。dir を渡すとその向きに飛ぶ
 const bits = (x, y, n, o = {}) => {
   for (let i = 0; i < n; i++) {
-    const sz = rnd(o.min || 5, o.max || 12), c = add(`<div></div>`, `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;border-radius:${o.round ? "50%" : "2px"};background:${pick(o.colors || ["#c9d1dc"])};z-index:${o.z || 74}`);
+    const sz = rnd(o.min || 5, o.max || 12), c = add(`<div></div>`, `left:${x}px;top:${y}px;width:${sz}px;height:${sz}px;border-radius:${o.round ? "50%" : "2px"};background:${pick(o.colors || ["#c9d1dc"])};z-index:${o.z || 74}`, o.parent);
     const a = o.dir !== undefined ? o.dir + rnd(-(o.spread ?? .6), o.spread ?? .6) : rnd(0, 6.283), d = rnd(o.dmin || 40, o.dmax || 140);
     anim(c, [{ transform: "none", opacity: 1 }, { transform: `translate(${Math.cos(a) * d}px,${Math.sin(a) * d + (o.grav ?? 60)}px) rotate(${rnd(-400, 400)}deg) scale(${o.grow || 1})`, opacity: 0 }],
       rnd(400, o.ms || 800), { easing: "cubic-bezier(.2,.7,.4,1)" }).then(() => c.remove());
   }
 };
-const puff = (x, y, n = 6, col = "#e9dfcf") => bits(x, y, n, { round: 1, colors: [col], min: 14, max: 30, dmin: 15, dmax: 70, grav: -20, grow: 1.8, ms: 700, z: 30 });
+const puff = (x, y, n = 6, col = "#e9dfcf", parent) => bits(x, y, n, { round: 1, colors: [col], min: 14, max: 30, dmin: 15, dmax: 70, grav: -20, grow: 1.8, ms: 700, z: 30, parent });
 const starPath = (n, R, r) => Array.from({ length: n * 2 }, (_, i) => { const a = i * Math.PI / n, d = i % 2 ? r : R; return `${i ? "L" : "M"}${(Math.cos(a) * d).toFixed(1)} ${(Math.sin(a) * d).toFixed(1)}`; }).join("") + "Z";
 const impact = (x, y, c = "#fff", sz = 240) => { const e = add(`<svg viewBox="-50 -50 100 100"><path d="${starPath(12, 50, 20)}" fill="${c}" stroke="#0005" stroke-width="2"/></svg>`, `left:${x - sz / 2}px;top:${y - sz / 2}px;width:${sz}px;height:${sz}px;z-index:84`); anim(e, [{ transform: "scale(.2)", opacity: 1 }, { transform: "scale(1.15) rotate(20deg)", opacity: 0 }], 380).then(() => e.remove()); };
 const kira = (x, y, c = "#fff", sz = 60) => { const e = add(`<div>✦</div>`, `left:${x}px;top:${y}px;font-size:${sz}px;line-height:1;color:${c};translate:-50% -50%;z-index:83;text-shadow:0 0 16px ${c}`); anim(e, [{ transform: "scale(.2)", opacity: 1 }, { transform: "scale(1.1)", opacity: 1, offset: .4 }, { transform: "scale(.3) rotate(90deg)", opacity: 0 }], 320).then(() => e.remove()); };
@@ -356,12 +359,15 @@ async function loadSprites() {
 // ラッシュ本体。4秒 (CFG.total) のあいだ毎フレーム描き、実際に見えた時間とど真ん中が隠れた時間を測る
 function rush(P, r, o = {}) {
   const tot = CFG.total / 1000;
-  const cv = add(`<canvas></canvas>`, "left:0;top:0;width:960px;height:540px;z-index:60;pointer-events:none");
-  const sc = Math.min(2.5, Math.max(1, K * (devicePixelRatio || 1)));
+  // 小窓版でも、ラッシュは画面全体 (OV) を走る。大きい版は舞台 (s) の上
+  const host = MINI ? OV : s;
+  const cv = add(`<canvas></canvas>`, "left:0;top:0;width:960px;height:540px;z-index:60;pointer-events:none", host);
+  const sc = Math.min(2.5, Math.max(1, (MINI ? KT : K) * (devicePixelRatio || 1)));
   cv.width = Math.round(W * sc); cv.height = Math.round(H * sc);
   const g = cv.getContext("2d");
-  const cnt = add(`<div class=cnt>子ども脱出 <b>0</b><small> / ${P.family}匹</small></div>`, "right:14px;bottom:12px;z-index:90"), num = cnt.querySelector("b");
-  const dbg = DEBUG ? (MINI ? add(`<div class=dbg></div>`, "left:12px;top:60px;z-index:96", TV) : add(`<div class=dbg></div>`, "right:12px;top:10px;z-index:96")) : null; // 小窓版は小窓の外 (左上) に出す
+  // 数と計測は、小窓版では小窓の外 (数は小窓のすぐ上、計測は左上) に出す
+  const cnt = add(`<div class=cnt>子ども脱出 <b>0</b><small> / ${P.family}匹</small></div>`, MINI ? "right:14px;bottom:250px;z-index:90" : "right:14px;bottom:12px;z-index:90", host), num = cnt.querySelector("b");
+  const dbg = DEBUG ? add(`<div class=dbg></div>`, MINI ? "left:12px;top:60px;z-index:96" : "right:12px;top:10px;z-index:96", host) : null;
   let byPix = DEBUG; // 実際の絵の色で真ん中を調べる (file:// で開くと調べられないので円で計算)
   const st = { first: null, last: null, runs: [], cov: 0, by: "" };
   const lines = r === "miss" ? [] : Array.from({ length: 18 }, () => ({ u: rnd(-300, DIAG), v: rnd(-HALF_V, HALF_V), len: rnd(90, 230) }));
@@ -464,10 +470,12 @@ function resultScene(r, d) {
 
 // 地鳴り (ラッシュの直前。4秒には入れない)
 async function rumble(r) {
-  if (r === "miss") { big("トコ…トコ…", 820, 56, { size: 30, fill: "silver", ms: 900 }); await wait(500); return; }
-  const tx = big(r === "big" ? "ドドドドドド!!" : "ドドドド…", 740, 60, { size: r === "big" ? 50 : 38, fill: "white", ms: 1300 }); tx.classList.add("trem");
+  // ハムが来る右上に出す。小窓版は画面全体の右上 (OV)
+  const parent = MINI ? OV : s;
+  if (r === "miss") { big("トコ…トコ…", 820, 56, { size: 30, fill: "silver", ms: 900, parent }); await wait(500); return; }
+  const tx = big(r === "big" ? "ドドドドドド!!" : "ドドドド…", 740, 60, { size: r === "big" ? 50 : 38, fill: "white", ms: 1300, parent }); tx.classList.add("trem");
   quake(520, r === "big" ? 7 : 4);
-  for (let i = 0; i < 8; i++) wait(i * 50).then(() => puff(rnd(860, 950), rnd(10, 70), 2));
+  for (let i = 0; i < 8; i++) wait(i * 50).then(() => puff(rnd(860, 950), rnd(10, 70), 2, undefined, parent));
   await wait(520);
 }
 
@@ -497,6 +505,7 @@ async function openWin() {
   await WIN.animate([{ scale: "0", opacity: 0 }, { scale: "1.08", opacity: 1, offset: .7 }, { scale: "1", opacity: 1 }], { duration: 340, fill: "forwards", easing: "ease-out" }).finished;
 }
 async function closeWin() {
+  OV.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 260, fill: "forwards" });
   await WIN.animate([{ scale: "1", opacity: 1 }, { scale: "0", opacity: 0 }], { duration: 260, fill: "forwards", easing: "ease-in" }).finished;
   REST.animate([{ transform: "translateY(30px) scale(.6)", opacity: 0 }, { transform: "translateY(-30px)", opacity: 1, offset: .6 }, { transform: "none", opacity: 1 }], { duration: 360, fill: "forwards" });
   await wait(1300);
@@ -507,6 +516,7 @@ async function play(key) {
   for (;;) {
     TIMERS.forEach(clearInterval); TIMERS.clear(); s.getAnimations().forEach(a => a.cancel());
     s.innerHTML = ""; s.style.background = ""; s.style.translate = ""; REACH = null; pushHook = null;
+    if (MINI) { OV.getAnimations().forEach(a => a.cancel()); OV.innerHTML = ""; }
     add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:0;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(10,6,24,.12) 0,rgba(10,6,24,.55) 100%)"); // 背景は OW のプレイ画面。周りを少し暗くして演出を見やすく
     const r = FIXED || ["big", "mid", "miss"][wpick([CFG.odds.big, CFG.odds.mid, CFG.odds.miss])];
     tell({ phase: "start", r, key });
