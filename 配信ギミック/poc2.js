@@ -226,3 +226,39 @@ Object.assign(scenes, {
     bubble("以上、報告でした", 600, 250, 1100); await wait(1200);
   },
 });
+
+// 引退会見と対になる、勝ったときのヒーローインタビュー
+Object.assign(scenes, {
+  async hero() { // ヒーローインタビュー。勝つたびにお立ち台へ。連勝するほど調子に乗る
+    const h = ham(N), n = add(`<div class=lab>本日のヒーロー 0回</div>`, "right:16px;top:16px");
+    const confetti = k => { for (let i = 0; i < k; i++) { const e = add(`<div></div>`, `left:${rnd(0, 950)}px;top:-20px;width:${rnd(8, 14)}px;height:${rnd(5, 9)}px;background:${["#ff4d6d", "#ffd23c", "#4dabf7", "#69db7c", "#fff"][i % 5]};z-index:35`);
+      anim(e, [{ transform: "none" }, { transform: `translate(${rnd(-90, 90)}px,600px) rotate(${rnd(360, 1080)}deg)` }], rnd(1400, 2300), { delay: rnd(0, 700), easing: "linear", fill: "both" }).then(() => e.remove()); } };
+    const cheer = () => [["ハムー!", 110, 0], ["最高ー!", 250, 250], ["ナイス!", 60, 500]].forEach(([t, x, d]) => wait(d).then(() => {
+      const e = add(`<div class=t>${t}</div>`, `left:${x}px;top:430px;font-size:30px;color:#fff;z-index:30`); anim(e, [{ transform: "none", opacity: 1 }, { transform: "translateY(-90px)", opacity: 0 }], 1200).then(() => e.remove()); }));
+    const rounds = [
+      ["勝利", N, "今日の決勝ウルト、どうでしたか?", "チームのおかげです"],
+      ["2連勝", R1, "2試合連続のヒーローですが?", "まあ、実力ですね"],
+      ["3連勝", R2, "最後に、ファンに一言!", "最高でーす!!"],
+    ];
+    for (let i = 0; i < rounds.length; i++) {
+      const [ev, src, q, a] = rounds[i];
+      await wait(1000); chip(ev); say("勝利!!", 470, 210, { size: 60, ms: 700 }); if (i) swap(h, src, true); else hop(h, 50); await wait(700);
+      const set = [ // 後ろの看板 (ハムTV の柄)、お立ち台、インタビュアーのマイク
+        add(`<div>${Array.from({ length: 20 }, (_, k) => `<div style="left:${14 + (k % 4) * 88}px;top:${46 + Math.floor(k / 4) * 52}px;font-size:16px;color:#1d4e9e;opacity:.5;white-space:nowrap">🐹ハムTV</div>`).join("")}
+          <div style="left:0;top:0;width:100%;height:36px;background:#c62828;color:#fff;text-align:center;font-size:26px;line-height:36px">ヒーローインタビュー</div></div>`,
+          `left:${HX - 120}px;top:${HY - 74}px;width:${HW + 136}px;height:${HH + 80}px;background:#f4f7fb;border:4px solid #c9a227;overflow:hidden;z-index:5`),
+        add(`<div></div>`, `left:${HX - 24}px;top:518px;width:${HW + 48}px;height:22px;background:repeating-linear-gradient(90deg,#d32f2f 0 26px,#fff 26px 52px);border:3px solid ${INK};z-index:9`),
+        add(`<svg viewBox="0 0 160 80" style="overflow:visible"><path d="M4 76L100 34" stroke=#222 stroke-width=12 stroke-linecap=round /><g transform="rotate(-24 82 44)"><rect x=64 y=32 width=38 height=24 rx=3 fill=#c62828 stroke=${INK} stroke-width=3 /><text x=83 y=49 text-anchor=middle font-size=10 font-weight=900 fill=#fff>ハムTV</text></g>
+          <circle cx=118 cy=24 r=20 fill=#333 stroke=${INK} stroke-width=4 /><circle cx=118 cy=24 r=12 fill=none stroke=#888 stroke-width=2 stroke-dasharray="3 3" /></svg>`, `left:${HX - 36}px;top:${HY + 122}px;width:160px;height:80px;z-index:13`),
+      ];
+      const sash = ov(h, `<g transform="rotate(-16 620 960)"><rect x=110 y=900 width=1020 height=124 fill=#d32f2f stroke=${INK} stroke-width=10 /><text x=620 y=990 text-anchor=middle font-size=84 font-weight=900 fill=#fff>本日のヒーロー</text></g>`);
+      n.textContent = `本日のヒーロー ${i + 1}回`; say("放送席、放送席!", 300, 150, { size: 42, color: "#fff", ms: 1100 });
+      const fl = setInterval(flash, 150); await wait(1200);
+      bubble(`アナ「${q}」`, 320, 250, 1600); await wait(1000);
+      if (i < rounds.length - 1) { bubble(a, 470, 330, 1300); cheer(); await wait(1500); }
+      else { say(a, 370, 210, { size: 80, ms: 1700 }); confetti(70); rain(20); cheer(); hop(h, 60); await wait(2000); }
+      clearInterval(fl); chip("次の試合"); set.forEach(e => e.remove()); sash.remove(); await wait(300);
+    }
+    bubble("明日も ここに立ちます", 600, 250, 1300); await wait(1500);
+  },
+});
