@@ -748,7 +748,7 @@ Object.assign(scenes, {
     const home = tpPad(x0, 528); bubble("乗ってみる", 640, 250, 900); await wait(1000); hop(h, 26); await wait(450);
     for (const [x, y, k, msg, bx, by, c] of [[470, 78, .32, "ここどこ!?", 470, 104, "テレポート先: HUDの上"], [470, 336, .46, "あ、どうも", 470, 170, "テレポート先: 敵の目の前"], [168, 476, .32, "体力バー、座り心地いい", 300, 360, "テレポート先: 体力バー"]]) {
       const pad = await jump(x, y, k, HW * k * .9); chip(c); bubble(msg, bx, by, 1150);
-      if (y === 336) { shake(h); say("!?", 560, 250, { size: 60, color: "#ff5a4a", ms: 700 }); }
+      if (y === 336) { anim(h, [-12, 10, -8, 6, 0].map(d => ({ transform: `${cur} translateX(${d}px)` })), 320, { easing: "linear" }); say("!?", 560, 250, { size: 60, color: "#ff5a4a", ms: 700 }); }
       await wait(1300); if (pad) pad.remove(); }
     await jump(x0, y0, 1, 0); await wait(150); chip("帰還…?");
     // ハムの顔が種に、種にハムの耳が付いて戻ってくる
