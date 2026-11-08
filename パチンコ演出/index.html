@@ -1,0 +1,133 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>パチンコ演出 | 配信ハムPoC</title>
+<style>
+:root{--bg:#15161c;--panel:#1f2129;--line:#2f323d;--ink:#eceef4;--sub:#b4b8c6;--acc:#ffd36b;--big:#ff6b8a;--mid:#59c8ff;--miss:#9aa6b8}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:bold 14px "Yu Gothic","Hiragino Sans",Meiryo,sans-serif}
+a{color:var(--acc)}
+.tabs{display:flex;gap:4px;max-width:1500px;margin:0 auto;padding:8px 16px 0;border-bottom:1px solid var(--line)}
+.tabs a{padding:7px 18px;border:1px solid var(--line);border-bottom:0;border-radius:10px 10px 0 0;background:var(--panel);color:var(--sub);text-decoration:none}
+.tabs a.on{background:var(--acc);color:#1a1408;border-color:var(--acc)}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;max-width:1500px;margin:0 auto;padding:12px 16px;height:calc(100vh - 42px)}
+#main{display:flex;flex-direction:column;min-height:0}
+#stage{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 280px);margin:0 auto;background:#000;border-radius:10px;overflow:hidden}
+#stage:fullscreen{max-height:none;border-radius:0}
+#stage iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0}
+#info{padding:10px 2px 0;overflow-y:auto}
+#name{font-size:20px;color:var(--acc)}
+#group{font-size:13px;color:var(--sub);font-weight:normal;margin-left:8px}
+#desc{margin:4px 0 8px;font:normal 15px/1.6 "Yu Gothic","Hiragino Sans",Meiryo,sans-serif}
+.ctrl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctrl button{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 14px;font:inherit;cursor:pointer}
+.ctrl button:hover{border-color:var(--acc)}
+.ctrl label{color:var(--sub);font-weight:normal;display:flex;align-items:center;gap:4px}
+.seg{display:flex}.seg button{border-radius:0;margin-left:-1px}.seg button:first-child{border-radius:8px 0 0 8px}.seg button:last-child{border-radius:0 8px 8px 0}
+.seg button.on{background:var(--acc);color:#1a1408;border-color:var(--acc)}
+.lb{color:var(--sub);font-weight:normal}
+#stat{margin-top:10px;padding:8px 12px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font:normal 14px/1.7 "Yu Gothic","Hiragino Sans",Meiryo,sans-serif;min-height:3em}
+#stat b{font-weight:bold}#stat .big{color:var(--big)}#stat .mid{color:var(--mid)}#stat .miss{color:var(--miss)}
+#stat .ok{color:#7dff8a}#stat .ng{color:#ff8a7a}
+#side{display:flex;flex-direction:column;min-height:0;overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:10px}
+#side h2{font-size:13px;color:var(--sub);margin:12px 12px 4px}
+#list button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--ink);font:normal 14px/1.45 "Yu Gothic","Hiragino Sans",Meiryo,sans-serif;padding:6px 12px;cursor:pointer}
+#list button:hover{background:#2a2d38}
+#list button.on{background:#3a3220;color:var(--acc);font-weight:bold}
+#list button small{color:#8a8fa0;margin-right:6px}
+.box{margin:0 12px 6px;font:normal 13px/1.65 "Yu Gothic","Hiragino Sans",Meiryo,sans-serif;color:var(--sub)}
+.box b{color:var(--ink)}
+.tl{position:relative;height:30px;margin:6px 0 24px;background:#2a2d38;border-radius:6px}
+.tl i{position:absolute;top:0;height:100%;border-radius:6px}
+.tl span{position:absolute;top:32px;font-size:11px;color:#8a8fa0;transform:translateX(-50%);white-space:nowrap}
+.tl em{position:absolute;top:6px;font:bold 12px sans-serif;font-style:normal;color:#1a1408;transform:translateX(-50%);white-space:nowrap}
+ol.ideas{margin:0;padding-left:1.4em}ol.ideas li{margin-bottom:6px}
+@media (max-width:900px){#app{grid-template-columns:1fr;height:auto}#stage{max-height:none}#side{max-height:none}}
+</style>
+<nav class="tabs"><a href="../配信ギミック/all.html">配信演出</a><a class="on" href="./">パチンコ演出</a></nav>
+<div id="app">
+<div id="main">
+<div id="stage"><iframe id="fr" title="パチンコ演出の見本" allow="fullscreen"></iframe></div>
+<div id="info"><div><span id="name"></span><span id="group"></span></div><p id="desc"></p>
+<div class="ctrl"><span class="lb">結果:</span><div class="seg" id="res"><button data-r="">おまかせ</button><button data-r="big">大当たり</button><button data-r="mid">当たり</button><button data-r="miss">ハズレ</button></div>
+<button id="again">もう一度 (R)</button><button id="push">PUSH (スペース)</button><button id="full">全画面 (F)</button>
+<label><input type="checkbox" id="dbg"> 計測を画面に出す</label></div>
+<div id="stat">流れると、ここに今回の結果と、ハムが出ていた時間・ど真ん中が隠れた時間が出ます。</div>
+</div>
+</div>
+<div id="side">
+<h2>パチンコ演出 (クリックで再生)</h2><div id="list"></div>
+<h2>共通の結末: 家族ラッシュ</h2>
+<div class="box">どの話も最後は同じコード (<b>pachi.js の ending</b>) で終わります。出られた家族が<b>右上から左下へ</b>走り抜け、その数が結果を表します。
+<div class="tl"><i style="left:0;width:100%;background:#4a4f63"></i><i style="left:25%;width:50%;background:var(--acc)"></i><em style="left:50%">ど真ん中が隠れる 1〜3秒</em><span style="left:3%">0秒</span><span style="left:50%">2秒</span><span style="left:95%">4秒</span></div>
+・最初のハムが見えてから最後のハムが消えるまで <b>4秒</b><br>・大当たりは、ど真ん中が <b>2秒</b> 隠れる (1〜3秒)。隠れている間に、裏で図柄の画面に入れかえる<br>
+・<b>大当たり</b>: 子ども全員 (約170匹) で画面いっぱい / <b>当たり</b>: 4割ほどが、まばらに / <b>ハズレ</b>: 1〜2匹だけ (1匹はとぼとぼ、もう1匹は途中で転ぶ)<br>
+・予告の色: 青 &lt; 緑 &lt; 赤 &lt; 金 &lt; 虹 (虹は大当たり確定)</div>
+<h2>これからの案 (同じ結末につながる話)</h2>
+<div class="box"><ol class="ideas">
+<li><b>ネコの見張りをかいくぐれ</b>: 寝ているネコの横を、親がそろりそろり鍵を取りに行く。ネコが目を開けるたびに変なポーズで固まる。鍵まで届けば全員。</li>
+<li><b>頬袋レスキュー</b>: 母ハムが頬袋に子どもを詰めて運ぶ (本物のハムの習性)。頬がどこまでふくらむかが期待度。「ぽぽぽぽん!」と吐き出すと家族ラッシュ。</li>
+<li><b>クレーンゲームの景品</b>: 子どもたちがクレーンゲームの景品にされている。親がアームを動かし、つかんだ数がそのまま結果。</li>
+<li><b>床下トンネル</b>: 親が床下を掘り進む。石 → 岩 → 鉄板と固くなり、掘り抜けた出口が右上。</li>
+<li><b>ひまわりの種で呼べ</b>: 迷子の子どもたちを、種をまいて呼び戻す。まいた種の色が予告。</li>
+<li><b>風船で高い棚へ</b>: 親が風船で浮かび、高い棚の檻へ。風船が何個割れずに残るかが期待度。</li>
+<li><b>ハム大砲</b>: 親が大砲で錠前を撃つ。導火線の長さと火花の色が予告。</li>
+<li><b>成金パパの身代金</b> (プレミア): 成金ハムが札束で檻ごと買い取る。虹のときだけ出る大当たり確定。</li>
+<li><b>停電の倉庫</b>: 真っ暗で目だけが光る。懐中電灯で照らした所にいた子だけ助けられる。</li>
+<li><b>冬眠の目覚まし</b>: 冬眠中の子どもを目覚まし時計で起こす。起きた数が結果。</li>
+</ol></div>
+<div class="box">← → で話を切りかえ、1〜4 で結果 (おまかせ/大当たり/当たり/ハズレ)、スペースで PUSH、R でもう一度、F で全画面。</div>
+</div>
+</div>
+<script>
+const L = [
+  ["P01_檻からの大脱走", "本命", "親と子どもたちが檻に捕まっている。親が 鉄の棒をかじる → 回し車で勢いをつけて体当たり → 気合いため (予告の色) → 最後の体当たり (PUSH)。檻ごと吹き飛べば全員、扉が半分開けば半分、びくともしなければ棒のすき間から1〜2匹だけ逃げる。錠前と気合いの色、脱出ゲージ (MAX は大当たりだけ) が期待度。"],
+  ["P02_回し車でシャッター", "案2", "子どもたちは右上の「こども部屋」に閉じこめられている。親が回し車を回すほど鎖が巻かれてシャッターが上がる (3段階で速くなり、3段目で予告の色)。全開なら全員、途中で止まれば半分、回しすぎて親が画面にベチッと放り出されたら、閉まったシャッターの下から1〜2匹だけ。部屋が右上にあるので、そのまま家族ラッシュにつながる。"],
+  ["P03_トランポリンでボタン", "案3", "子どもたちは高い棚の上の檻。親がトランポリンで跳ぶたびに STEP1〜5 が上がる (ステップアップ予告。STEP5 は虹で確定)。最後の大ジャンプでボタンを頭で押せば全員、かすれば半分、棚にぶつかったら1〜2匹だけ落ちてくる。"],
+  ["P00_結末だけ", "確認用", "共通の結末 (家族ラッシュ → 図柄) だけを流す。4秒・2秒のタイミングや、ハムの数の違いを見るとき用。「計測を画面に出す」をつけると、経過時間・ど真ん中が隠れているか・画面の埋まり具合が出る。"],
+];
+const $ = id => document.getElementById(id), RES = { big: "大当たり", mid: "当たり", miss: "ハズレ" };
+let cur = 0, R = "", notes = [];
+try { R = localStorage.getItem("pachiR") || ""; $("dbg").checked = localStorage.getItem("pachiDbg") === "1"; } catch (e) {}
+L.forEach(([f], i) => { const b = document.createElement("button"), [id, nm] = [f.split("_")[0], f.slice(f.indexOf("_") + 1)]; b.innerHTML = `<small>${id}</small>`; b.append(nm); b.onclick = () => show(i); $("list").append(b); });
+function load() { // 今の話・結果・計測で iframe を読みなおす
+  const q = new URLSearchParams(); if (R) q.set("r", R); if ($("dbg").checked) q.set("debug", "1");
+  $("fr").src = `${L[cur][0]}.html${q.toString() ? "?" + q : ""}`;
+  document.querySelectorAll("#res button").forEach(b => b.classList.toggle("on", b.dataset.r === R));
+  $("stat").textContent = "読みこみ中…";
+}
+function show(i) {
+  cur = (i + L.length) % L.length; const [f, g, d] = L[cur];
+  $("name").textContent = f.replace("_", " "); $("group").textContent = g; $("desc").textContent = d;
+  document.querySelectorAll("#list button").forEach((b, k) => b.classList.toggle("on", k === cur));
+  history.replaceState(null, "", "#" + encodeURIComponent(f)); document.title = f.replace("_", " ") + " | パチンコ演出";
+  load();
+}
+const sec = x => x == null ? "—" : x.toFixed(2);
+addEventListener("message", e => { // 演出ページからの知らせ
+  const m = e.data && e.data.pachi; if (!m || e.source !== $("fr").contentWindow) return;
+  if (m.phase === "key") return onKey(m.key, m.code, true);
+  if (m.phase === "start") { notes = []; $("stat").innerHTML = `今回: <b class="${m.r}">${RES[m.r]}</b> (流れています)`; }
+  if (m.phase === "note") { notes.push(m.text); $("stat").innerHTML = $("stat").innerHTML.split("<br>")[0] + "<br>" + notes.join(" / "); }
+  if (m.phase === "rush") {
+    const s = m.st, dur = s.dur, hide = s.hideA == null ? null : s.hideB - s.hideA;
+    const okDur = Math.abs(dur - 4) < .1, okHide = m.r !== "big" || (hide != null && Math.abs(hide - 2) < .15);
+    $("stat").innerHTML = `今回: <b class="${m.r}">${RES[m.r]}</b> — ${notes.join(" / ")}<br>` +
+      `ハムが見えていた: ${sec(s.first)} → ${sec(s.last)} 秒 (<b class="${okDur ? "ok" : "ng"}">${sec(dur)}秒</b>) / ` +
+      `ど真ん中が隠れた: ${hide == null ? "なし" : `${sec(s.hideA)} → ${sec(s.hideB)} 秒 (<b class="${okHide ? "ok" : "ng"}">${sec(hide)}秒</b>)`} / ` +
+      `子ども ${s.kids} / ${s.family}匹${s.cov ? ` / 画面の埋まり 最大 ${Math.round(s.cov * 100)}%` : ""}<span style="color:#8a8fa0"> (${s.by}で計測)</span>`;
+  }
+});
+$("res").onclick = e => { const b = e.target.closest("button"); if (!b) return; R = b.dataset.r; try { localStorage.setItem("pachiR", R); } catch (err) {} load(); };
+$("dbg").onchange = () => { try { localStorage.setItem("pachiDbg", $("dbg").checked ? "1" : "0"); } catch (err) {} load(); };
+$("again").onclick = load;
+$("push").onclick = () => $("fr").contentWindow.postMessage({ pachi: "push" }, "*");
+$("full").onclick = () => { const st = $("stage"); document.fullscreenElement ? document.exitFullscreen() : st.requestFullscreen && st.requestFullscreen(); };
+function onKey(key, code, fromFrame) {
+  if (key === "ArrowLeft") show(cur - 1); else if (key === "ArrowRight") show(cur + 1);
+  else if (key === "f" || key === "F") $("full").click(); else if (key === "r" || key === "R") load();
+  else if (code === "Space" && !fromFrame) $("push").click();
+  else if (/^[1-4]$/.test(key)) { R = ["", "big", "mid", "miss"][+key - 1]; try { localStorage.setItem("pachiR", R); } catch (err) {} load(); }
+}
+addEventListener("keydown", e => { if (e.target.tagName === "INPUT") return; if (e.code === "Space") e.preventDefault(); onKey(e.key, e.code); });
+const pick0 = () => { const f = decodeURIComponent(location.hash.slice(1)), i = L.findIndex(x => x[0] === f); return i < 0 ? 0 : i; };
+show(pick0());
+</script>
+</html>

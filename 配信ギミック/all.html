@@ -4,9 +4,12 @@
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--ink);font:bold 14px "Yu Gothic","Hiragino Sans",Meiryo,sans-serif}
 a{color:var(--acc)}
-#app{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;max-width:1500px;margin:0 auto;padding:12px 16px;height:100vh}
+.tabs{display:flex;gap:4px;max-width:1500px;margin:0 auto;padding:8px 16px 0;border-bottom:1px solid var(--line)}
+.tabs a{padding:7px 18px;border:1px solid var(--line);border-bottom:0;border-radius:10px 10px 0 0;background:var(--panel);color:var(--sub);text-decoration:none}
+.tabs a.on{background:var(--acc);color:#1a1408;border-color:var(--acc)}
+#app{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;max-width:1500px;margin:0 auto;padding:12px 16px;height:calc(100vh - 42px)}
 #main{display:flex;flex-direction:column;min-height:0}
-#stage{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 150px);margin:0 auto;background:#000;border-radius:10px;overflow:hidden}
+#stage{position:relative;width:100%;aspect-ratio:16/9;max-height:calc(100vh - 192px);margin:0 auto;background:#000;border-radius:10px;overflow:hidden}
 #stage:fullscreen{max-height:none;border-radius:0}
 #stage iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0}
 #info{padding:10px 2px 0}
@@ -42,6 +45,7 @@ a{color:var(--acc)}
 #none{display:none;color:var(--sub);font-weight:normal;padding:10px 12px}
 @media (max-width:900px){#app{grid-template-columns:1fr;height:auto}#stage{max-height:none}#list{max-height:60vh}}
 </style>
+<nav class="tabs"><a class="on" href="all.html">配信演出</a><a href="../パチンコ演出/">パチンコ演出</a></nav>
 <div id="app">
 <div id="main">
 <div id="stage"><iframe id="fr" title="演出の見本" allow="fullscreen"></iframe></div>
