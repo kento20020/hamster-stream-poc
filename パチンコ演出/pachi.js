@@ -1,12 +1,13 @@
 // パチンコ演出 PoC の土台。どの話も最後は ending(r) (家族ラッシュ → 図柄の結果) で終わる。
 // ページ: <script src="pachi.js"></script><script src="stories.js"></script><script>play("cage")</script>
 // 背景は配信演出と同じ OW のプレイ画面 (../配信ギミック/ow_bg.png)。話ごとの背景は塗らず、小道具だけを上に置く
-// URL: ?r=big|mid|miss で結果を固定 (なければ毎回抽選)。&debug=1 で計測を画面に出す。
+// URL: ?r=big|mid|miss で結果を固定 (なければ毎回抽選)。&debug=1 で計測を画面に出す。&mini=1 で右下の小窓で小さく流す。
 const HAM = "../通常ハム.png";
 const W = 960, H = 540, CX = W / 2, CY = H / 2, INK = "#331c16";
 const IW = 1237, IH = 1271, RAT = IW / IH; // ハム画像の大きさ
 const Q = new URLSearchParams(location.search), DEBUG = Q.get("debug") === "1";
 const FIXED = ["big", "mid", "miss"].includes(Q.get("r")) ? Q.get("r") : null;
+const MINI = Q.get("mini") === "1", MS = .42; // mini=1: 右下の小窓で小さく流す版。MS は小窓の大きさ (画面に対する割合)
 
 // ★ 結末のタイミング。ここを変えると全部の話に効く
 const CFG = {
@@ -77,15 +78,23 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden}
 #s .cut .ln{left:0;top:0;width:100%;height:100%;background:repeating-linear-gradient(90deg,#fff0 0 70px,#fff4 70px 76px);animation:ln .25s linear infinite}@keyframes ln{to{background-position:-76px 0}}
 #s .cnt{padding:5px 14px;background:#000c;border:2px solid #ffd23c;border-radius:12px;font-size:20px;color:#fff;white-space:nowrap}
 #s .cnt b{position:relative;color:#ffd23c;font-size:28px}#s .cnt small,#s .cnt span{position:relative;font-size:16px;color:#ccd}
-#s .dbg{width:250px;padding:8px 10px;background:#000d;border:1px solid #6cf;border-radius:8px;font:bold 14px/1.5 Consolas,monospace;color:#cfe}
-#s .dbg div{position:relative}#s .dbg .bar{height:12px;margin-top:4px;background:#234;border-radius:3px}#s .dbg .bar i{top:0;height:100%}
+:is(#s,#tv) .dbg{position:absolute;width:250px;padding:8px 10px;background:#000d;border:1px solid #6cf;border-radius:8px;font:bold 14px/1.5 Consolas,monospace;color:#cfe}
+:is(#s,#tv) .dbg div{position:relative}:is(#s,#tv) .dbg .bar{height:12px;margin-top:4px;background:#234;border-radius:3px}:is(#s,#tv) .dbg .bar i{position:absolute;top:0;height:100%}
+/* 小窓版: OW の画面 (#tv) の右下に小窓 (#win)。中身はいつもの 960×540 の舞台 (#s) を縮めたもの */
+#tv{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;background:#171d2c url(../配信ギミック/ow_bg.png) center/cover}
+#win{position:absolute;left:-14px;top:-14px;width:960px;height:540px;transform:scale(${MS});transform-origin:100% 100%;scale:0;opacity:0}
+#win #s{border-radius:30px;background:rgba(14,10,32,.5);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 0 0 9px #fff,0 0 0 18px #d0103a,0 18px 40px #000c}
+#rest{position:absolute;left:720px;top:304px;width:224px;transform-origin:50% 100%}
 #s .stars{animation:spin .6s linear infinite}#s .stars i{font-style:normal;color:#ffe14d;font-size:30px;-webkit-text-stroke:2px #6a4300;paint-order:stroke fill;translate:-50% -50%}
 </style>`);
 // 目のフタ用のグラデーション (目の上は灰色、下は白い毛)。ページ全体で1つ
 document.body.insertAdjacentHTML("beforeend", `<svg width="0" height="0" style="position:absolute"><defs><linearGradient id="eyefur" x1="0" y1="0" x2="0" y2="1"><stop offset=".84" stop-color="#bfb8b6"/><stop offset=".84" stop-color="#fbf5e9"/></linearGradient></defs></svg>`);
-const s = document.createElement("div"); s.id = "s"; document.body.append(s);
-let K = 1; // 画面の拡大率
-const fit = () => { K = Math.min(innerWidth / W, innerHeight / H); s.style.transform = `translate(${(innerWidth - W * K) / 2}px,${(innerHeight - H * K) / 2}px) scale(${K})`; };
+const s = document.createElement("div"); s.id = "s";
+const TV = MINI ? document.createElement("div") : null, WIN = MINI ? document.createElement("div") : null, REST = MINI ? document.createElement("img") : null;
+if (MINI) { TV.id = "tv"; WIN.id = "win"; REST.id = "rest"; REST.src = HAM; document.body.append(TV); TV.append(REST, WIN); WIN.append(s); } // ふだんは右下にいつものハム
+else document.body.append(s);
+let K = 1, KP = 1; // K: 舞台の 1px が画面で何 px か (canvas の細かさに使う)、KP: 舞台を揺らすときの単位
+const fit = () => { const k = Math.min(innerWidth / W, innerHeight / H); (MINI ? TV : s).style.transform = `translate(${(innerWidth - W * k) / 2}px,${(innerHeight - H * k) / 2}px) scale(${k})`; K = MINI ? k * MS : k; KP = MINI ? 1 : k; };
 addEventListener("resize", fit); fit();
 
 // ===== 小道具 =====
@@ -104,7 +113,7 @@ const anim = (e, kf, ms = 350, o = {}) => e.animate(kf, { duration: ms, easing: 
 const tell = o => { try { if (parent !== window) parent.postMessage({ pachi: o }, "*"); } catch (e) {} }; // 一覧ページに知らせる
 const note = text => tell({ phase: "note", text }); // 予告の中身など
 const flash = (c = "#fff", ms = 260, o = .9) => { const f = add(`<div></div>`, `left:0;top:0;width:960px;height:540px;background:${c};z-index:88;pointer-events:none`); anim(f, [{ opacity: o }, { opacity: 0 }], ms).then(() => f.remove()); };
-const quake = (ms = 400, px = 8) => s.animate(Array.from({ length: 9 }, (_, i) => ({ translate: i === 8 ? "0 0" : `${rnd(-px, px) * K}px ${rnd(-px, px) * K}px` })), { duration: ms, easing: "linear" });
+const quake = (ms = 400, px = 8) => s.animate(Array.from({ length: 9 }, (_, i) => ({ translate: i === 8 ? "0 0" : `${rnd(-px, px) * KP}px ${rnd(-px, px) * KP}px` })), { duration: ms, easing: "linear" });
 // 大きい文字 (パチンコっぽいメタリック文字)。fill: gold / red / blue / green / silver / white / rainbow
 const big = (txt, x, y, o = {}) => {
   const f = o.fill || "gold", sz = o.size || 64;
@@ -352,7 +361,7 @@ function rush(P, r, o = {}) {
   cv.width = Math.round(W * sc); cv.height = Math.round(H * sc);
   const g = cv.getContext("2d");
   const cnt = add(`<div class=cnt>子ども脱出 <b>0</b><small> / ${P.family}匹</small></div>`, "right:14px;bottom:12px;z-index:90"), num = cnt.querySelector("b");
-  const dbg = DEBUG ? add(`<div class=dbg></div>`, "right:12px;top:10px;z-index:96") : null;
+  const dbg = DEBUG ? (MINI ? add(`<div class=dbg></div>`, "left:12px;top:60px;z-index:96", TV) : add(`<div class=dbg></div>`, "right:12px;top:10px;z-index:96")) : null; // 小窓版は小窓の外 (左上) に出す
   let byPix = DEBUG; // 実際の絵の色で真ん中を調べる (file:// で開くと調べられないので円で計算)
   const st = { first: null, last: null, runs: [], cov: 0, by: "" };
   const lines = r === "miss" ? [] : Array.from({ length: 18 }, () => ({ u: rnd(-300, DIAG), v: rnd(-HALF_V, HALF_V), len: rnd(90, 230) }));
@@ -418,7 +427,7 @@ function rush(P, r, o = {}) {
         dbg.innerHTML = `<div>経過 ${t.toFixed(2)} / ${tot.toFixed(2)} 秒</div><div>ど真ん中: ${covered ? "<b style='color:#f66'>隠れている</b>" : "見えている"}</div><div>画面の埋まり ${Math.round(c * 100)}% (最大 ${Math.round(st.cov * 100)}%)</div><div>見えているハム ${vis.length}匹</div>` +
           `<div class=bar>${runs.map(([a, b]) => `<i style="left:${a / tot * 100}%;width:${(Math.min(b, tot) - a) / tot * 100}%;background:#f66"></i>`).join("")}<i style="left:${Math.min(100, t / tot * 100)}%;width:2px;background:#fff"></i></div>`;
       }
-      if (r === "big") s.style.translate = `${(rnd(-3, 3) * env * K).toFixed(1)}px ${(rnd(-3, 3) * env * K).toFixed(1)}px`;
+      if (r === "big") s.style.translate = `${(rnd(-3, 3) * env * KP).toFixed(1)}px ${(rnd(-3, 3) * env * KP).toFixed(1)}px`;
       if (!swapped && t >= tot / 2) { swapped = true; o.swap && o.swap(); }
       if (t < tot + .12) return requestAnimationFrame(frame);
       if (hideFrom !== null) st.runs.push([hideFrom, t]);
@@ -481,15 +490,28 @@ async function ending(r, o = {}) {
 
 // ===== くり返し再生 =====
 const scenes = {};
+// 小窓版: 右下のハムがはねて引っこみ、小窓が開く / 終わったら閉じてハムが戻る
+async function openWin() {
+  REST.animate([{ transform: "none" }, { transform: "translateY(-40px) scale(1.05)", offset: .4 }, { transform: "translateY(30px) scale(.6)", opacity: 0 }], { duration: 320, fill: "forwards", easing: "ease-in" });
+  await wait(180);
+  await WIN.animate([{ scale: "0", opacity: 0 }, { scale: "1.08", opacity: 1, offset: .7 }, { scale: "1", opacity: 1 }], { duration: 340, fill: "forwards", easing: "ease-out" }).finished;
+}
+async function closeWin() {
+  await WIN.animate([{ scale: "1", opacity: 1 }, { scale: "0", opacity: 0 }], { duration: 260, fill: "forwards", easing: "ease-in" }).finished;
+  REST.animate([{ transform: "translateY(30px) scale(.6)", opacity: 0 }, { transform: "translateY(-30px)", opacity: 1, offset: .6 }, { transform: "none", opacity: 1 }], { duration: 360, fill: "forwards" });
+  await wait(1300);
+}
 async function play(key) {
   await loadSprites();
+  if (MINI) await wait(900); // 最初は右下にいつものハムだけ
   for (;;) {
     TIMERS.forEach(clearInterval); TIMERS.clear(); s.getAnimations().forEach(a => a.cancel());
     s.innerHTML = ""; s.style.background = ""; s.style.translate = ""; REACH = null; pushHook = null;
     add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:0;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(10,6,24,.12) 0,rgba(10,6,24,.55) 100%)"); // 背景は OW のプレイ画面。周りを少し暗くして演出を見やすく
     const r = FIXED || ["big", "mid", "miss"][wpick([CFG.odds.big, CFG.odds.mid, CFG.odds.miss])];
     tell({ phase: "start", r, key });
+    if (MINI) await openWin();
     await scenes[key](r);
-    await wait(500);
+    if (MINI) await closeWin(); else await wait(500);
   }
 }
