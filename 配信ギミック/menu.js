@@ -33,6 +33,22 @@ const tidy = before => { for (const c of [...s.children]) if (!before.has(c) && 
 const runScene = async key => { const before = new Set(s.children); await scenes[key](); tidy(before); };
 const runFx = async (it, h, n = 1) => { const before = new Set(s.children); await FX[it.fx](h, n); tidy(before); h.getAnimations().forEach(a => a.cancel()); h.img.style.filter = ""; h.style.zIndex = 10; };
 const flashW = (ms = 220, z = 25) => fade(layer(`background:#fff;z-index:${z}`), ms);
+// ハムの絵柄に合わせる手描き風の日本語フォント (Google Fonts)。ページに1回だけ読み込む
+if (!document.getElementById("mfont")) document.head.insertAdjacentHTML("beforeend", `<link id=mfont rel=stylesheet href="https://fonts.googleapis.com/css2?family=Yusei+Magic&family=Zen+Maru+Gothic:wght@700;900&family=Klee+One:wght@600&family=Kiwi+Maru:wght@500&family=Yomogi&family=M+PLUS+Rounded+1c:wght@800&display=swap">`);
+// 胸の前 (顔のすぐ下) でボードを両手で持つ。ボードの幅はハムと同じくらい。M11〜M16 で共通
+// 返す bd にボードの中身を描く。前足は wrap の上に乗るので、bd を回しても前足は回らない
+const chestBoard = (opt = {}) => {
+  const up = opt.up ?? 66, BW = Math.round(opt.w ?? HW + 4), BH = Math.round(opt.h ?? 142), bx = HX + HW / 2 - BW / 2, by = HY + HH - BH, h = ham(N);
+  const wrap = add(`<div></div>`, `left:${bx}px;top:${by}px;width:${BW}px;height:${BH}px;z-index:12`);
+  const bd = add(`<div></div>`, "left:0;top:0;width:100%;height:100%", wrap);
+  const paws = [-1, 1].map(d => add(`<svg viewBox="0 0 40 56" style="overflow:visible"><path d="M${d < 0 ? 26 : 14} 4Q${d < 0 ? 4 : 36} 6 ${d < 0 ? 6 : 34} 28Q${d < 0 ? 4 : 36} 50 ${d < 0 ? 26 : 14} 52Z" fill=#fbcbc3 stroke=${INK} stroke-width=4 />
+    <path d="M${d < 0 ? 24 : 16} 18H${d < 0 ? 32 : 8}M${d < 0 ? 24 : 16} 28H${d < 0 ? 33 : 7}M${d < 0 ? 24 : 16} 38H${d < 0 ? 32 : 8}" stroke=${INK} stroke-width=3 stroke-linecap=round /></svg>`,
+    `left:${d < 0 ? -22 : BW - 18}px;top:${BH / 2 - 28}px;width:40px;height:56px;z-index:5`, wrap));
+  const raise = async () => { anim(h, [{ transform: "none" }, { transform: `translateY(-${up}px)` }], 350); await anim(wrap, [{ transform: "translateY(170px)" }, { transform: "translateY(-8px)", offset: .8 }, { transform: "none" }], 420); };
+  const lower = async () => { anim(wrap, [{ transform: "none" }, { transform: "translateY(170px)" }], 350, { easing: "ease-in" }); await anim(h, [{ transform: `translateY(-${up}px)` }, { transform: "none" }], 350); };
+  const bob = (px = 10, ms = 480) => anim(wrap, [{ transform: "none" }, { transform: `translateY(${px}px)`, offset: .5 }, { transform: "none" }], ms); // 持ち直す小さな上下
+  return { h, wrap, bd, paws, BW, BH, bx, by, raise, lower, bob };
+};
 
 // ⑨ で「発動中」に流す仮の演出。本番は健が作った演出に置きかえる
 const FX = {
@@ -161,21 +177,16 @@ Object.assign(scenes, {
   },
 
   async m_board() { // ⑪ 胸の前でボードをめくって1つずつ紹介。めくると、金と銀の飾りで値段と名前が出る
-    const h = ham(N), up = 66, BW = 300, BH = 152, bx = 810 - BW / 2, by = HY + HH - BH, S3 = 3;
+    const { h, wrap, bd, BW, BH, bx, by, raise, lower, bob } = chestBoard(), S3 = 3;
     cue("見本: 2秒ごとにボードをめくる（本番は9秒ごと）");
-    const wrap = add(`<div></div>`, `left:${bx}px;top:${by}px;width:${BW}px;height:${BH}px;z-index:12`);
-    const bd = add(`<div></div>`, `left:0;top:0;width:100%;height:100%;border-radius:14px;box-shadow:0 6px 16px #000a`, wrap);
-    const cv = add(`<canvas width=${BW * S3} height=${BH * S3}></canvas>`, "left:0;top:0;width:100%;height:100%;border-radius:14px", bd), c = cv.getContext("2d"); c.scale(S3, S3);
-    // ボードの左右を持つ前足 (ボードと一緒には回らない)
-    [-1, 1].forEach(d => add(`<svg viewBox="0 0 40 56" style="overflow:visible"><path d="M${d < 0 ? 26 : 14} 4Q${d < 0 ? 4 : 36} 6 ${d < 0 ? 6 : 34} 28Q${d < 0 ? 4 : 36} 50 ${d < 0 ? 26 : 14} 52Z" fill=#fbcbc3 stroke=${INK} stroke-width=4 />
-      <path d="M${d < 0 ? 24 : 16} 18H${d < 0 ? 32 : 8}M${d < 0 ? 24 : 16} 28H${d < 0 ? 33 : 7}M${d < 0 ? 24 : 16} 38H${d < 0 ? 32 : 8}" stroke=${INK} stroke-width=3 stroke-linecap=round /></svg>`,
-      `left:${d < 0 ? -22 : BW - 18}px;top:${BH / 2 - 28}px;width:40px;height:56px;z-index:2`, wrap));
+    bd.style.cssText += ";border-radius:12px;box-shadow:0 6px 16px #000a";
+    const cv = add(`<canvas width=${BW * S3} height=${BH * S3}></canvas>`, "left:0;top:0;width:100%;height:100%;border-radius:12px", bd), c = cv.getContext("2d"); c.scale(S3, S3);
     const rr = (x, y, w, hh, r) => { c.beginPath(); c.roundRect(x, y, w, hh, r); };
     const felt = (a, b) => { c.clearRect(0, 0, BW, BH); const g = c.createRadialGradient(BW * .4, BH * .3, 8, BW / 2, BH / 2, BW * .7); g.addColorStop(0, a); g.addColorStop(1, b); rr(0, 0, BW, BH, 14); c.fillStyle = g; c.fill();
       for (let i = 0; i < 260; i++) { c.fillStyle = `rgba(255,255,255,${Math.random() * .05})`; c.fillRect(Math.random() * BW, Math.random() * BH, 1.2, 1.2); } };
     // 文字を小さく描いて、点の位置ごとに「文字にかかっているか」を調べ、かかっていれば金か銀の飾りを置く
     const oc = document.createElement("canvas"), o = oc.getContext("2d", { willReadFrequently: true });
-    const studs = (text, x0, y0, w, hh, step) => { oc.width = w; oc.height = hh; let fs = hh;
+    const studs = (text, x0, y0, w, hh, step) => { w = Math.round(w); hh = Math.round(hh); oc.width = w; oc.height = hh; let fs = hh;
       do { o.font = `900 ${fs}px "Yu Gothic",Meiryo,sans-serif`; fs -= 1; } while (o.measureText(text).width > w * .97 && fs > 8);
       o.fillStyle = "#000"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillText(text, w / 2, hh / 2 + hh * .04);
       const d = o.getImageData(0, 0, w, hh).data, on = (x, y) => x >= 0 && y >= 0 && x < w && y < hh && d[(Math.floor(y) * w + Math.floor(x)) * 4 + 3] > 110, r = step * .46;
@@ -187,21 +198,20 @@ Object.assign(scenes, {
         g.addColorStop(0, cols[0]); g.addColorStop(.45, cols[1]); g.addColorStop(1, cols[2]); c.fillStyle = g; c.beginPath(); c.arc(X, Y, r, 0, 7); c.fill(); } };
     const blank = () => felt("#2b2b2e", "#101012");
     const show = it => { felt("#4b4b4e", "#2a2a2d");
-      rr(9, 8, 64, 20, 7); c.fillStyle = it.cur === "b" ? "#7c3aed" : "#d98e04"; c.fill();
-      c.fillStyle = "#fff"; c.font = `900 13px "Yu Gothic",Meiryo,sans-serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(cname(it), 41, 18.5);
-      studs(it.cur === "b" ? `◆${it.cost}` : `${it.cost}pt`, 80, 5, BW - 92, 50, 4.4); studs(it.name, 8, 60, BW - 16, 88, 3.4); };
+      rr(7, 7, 56, 18, 6); c.fillStyle = it.cur === "b" ? "#7c3aed" : "#d98e04"; c.fill();
+      c.fillStyle = "#fff"; c.font = `900 12px "Yu Gothic",Meiryo,sans-serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(cname(it), 35, 16.5);
+      studs(it.cur === "b" ? `◆${it.cost}` : `${it.cost}pt`, 68, 4, BW - 76, 44, 4); studs(it.name, 6, 52, BW - 12, 84, 3); };
     const sparkle = () => [[bx + 6, by + 4], [bx + BW - 6, by + 8], [bx + 10, by + BH - 6], [bx + BW - 10, by + BH - 4]].forEach(([x, y], i) => {
       const e = add(`<div>✦</div>`, `left:${x}px;top:${y}px;translate:-50% -50%;font-size:${rnd(22, 34)}px;color:#fff3c0;text-shadow:0 0 10px #ffd86b;z-index:14`);
       anim(e, [{ transform: "scale(.2)", opacity: 1 }, { transform: "scale(1.2) rotate(40deg)", opacity: 1, offset: .5 }, { transform: "scale(.3)", opacity: 0 }], 500, { delay: i * 60, fill: "both" }).then(() => e.remove()); });
     const P = a => `perspective(900px) rotateX(${a}deg)`;
-    const flip = async draw => { anim(wrap, [{ transform: "none" }, { transform: "translateY(10px)", offset: .5 }, { transform: "none" }], 480);
+    const flip = async draw => { bob();
       await anim(bd, [{ transform: P(0), filter: "none" }, { transform: P(88), filter: "brightness(.5)" }], 200, { easing: "ease-in" }); draw();
       await anim(bd, [{ transform: P(-88), filter: "brightness(.5)" }, { transform: P(10), filter: "none", offset: .7 }, { transform: P(0), filter: "none" }], 300); };
-    blank(); anim(h, [{ transform: "none" }, { transform: `translateY(-${up}px)` }], 350);
-    await anim(wrap, [{ transform: "translateY(170px)" }, { transform: "translateY(-8px)", offset: .8 }, { transform: "none" }], 420); await wait(700);
+    blank(); await raise(); await wait(700);
     for (const it of MENU) { await flip(() => show(it)); sparkle(); await wait(2000); }
     await flip(blank); await wait(400);
-    anim(wrap, [{ transform: "none" }, { transform: "translateY(170px)" }], 350, { easing: "ease-in" }); await anim(h, [{ transform: `translateY(-${up}px)` }, { transform: "none" }], 350); await wait(700);
+    await lower(); await wait(700);
   },
 
   async m_queue() { // ⑨ いま発動中と順番待ち (キュー)
@@ -259,4 +269,5 @@ Object.assign(scenes, {
     name.textContent = "🤖 次の合体ロボまで"; bubble("みんな、ありがとう!", 812, 262, 1400); hop(h, 30); await wait(1800);
   },
 });
+window.MK = { MENU, BITS, PTS, pr, pw, cname, cue, chestBoard, flashW };
 }
