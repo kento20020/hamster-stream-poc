@@ -160,6 +160,50 @@ Object.assign(scenes, {
     cue("試合開始: タブに戻る"); lab.textContent = "試合開始!"; await close(); await wait(1500); clearInterval(blink);
   },
 
+  async m_board() { // ⑪ 胸の前でボードをめくって1つずつ紹介。めくると、金と銀の飾りで値段と名前が出る
+    const h = ham(N), up = 66, BW = 300, BH = 152, bx = 810 - BW / 2, by = HY + HH - BH, S3 = 3;
+    cue("見本: 2秒ごとにボードをめくる（本番は9秒ごと）");
+    const wrap = add(`<div></div>`, `left:${bx}px;top:${by}px;width:${BW}px;height:${BH}px;z-index:12`);
+    const bd = add(`<div></div>`, `left:0;top:0;width:100%;height:100%;border-radius:14px;box-shadow:0 6px 16px #000a`, wrap);
+    const cv = add(`<canvas width=${BW * S3} height=${BH * S3}></canvas>`, "left:0;top:0;width:100%;height:100%;border-radius:14px", bd), c = cv.getContext("2d"); c.scale(S3, S3);
+    // ボードの左右を持つ前足 (ボードと一緒には回らない)
+    [-1, 1].forEach(d => add(`<svg viewBox="0 0 40 56" style="overflow:visible"><path d="M${d < 0 ? 26 : 14} 4Q${d < 0 ? 4 : 36} 6 ${d < 0 ? 6 : 34} 28Q${d < 0 ? 4 : 36} 50 ${d < 0 ? 26 : 14} 52Z" fill=#fbcbc3 stroke=${INK} stroke-width=4 />
+      <path d="M${d < 0 ? 24 : 16} 18H${d < 0 ? 32 : 8}M${d < 0 ? 24 : 16} 28H${d < 0 ? 33 : 7}M${d < 0 ? 24 : 16} 38H${d < 0 ? 32 : 8}" stroke=${INK} stroke-width=3 stroke-linecap=round /></svg>`,
+      `left:${d < 0 ? -22 : BW - 18}px;top:${BH / 2 - 28}px;width:40px;height:56px;z-index:2`, wrap));
+    const rr = (x, y, w, hh, r) => { c.beginPath(); c.roundRect(x, y, w, hh, r); };
+    const felt = (a, b) => { c.clearRect(0, 0, BW, BH); const g = c.createRadialGradient(BW * .4, BH * .3, 8, BW / 2, BH / 2, BW * .7); g.addColorStop(0, a); g.addColorStop(1, b); rr(0, 0, BW, BH, 14); c.fillStyle = g; c.fill();
+      for (let i = 0; i < 260; i++) { c.fillStyle = `rgba(255,255,255,${Math.random() * .05})`; c.fillRect(Math.random() * BW, Math.random() * BH, 1.2, 1.2); } };
+    // 文字を小さく描いて、点の位置ごとに「文字にかかっているか」を調べ、かかっていれば金か銀の飾りを置く
+    const oc = document.createElement("canvas"), o = oc.getContext("2d", { willReadFrequently: true });
+    const studs = (text, x0, y0, w, hh, step) => { oc.width = w; oc.height = hh; let fs = hh;
+      do { o.font = `900 ${fs}px "Yu Gothic",Meiryo,sans-serif`; fs -= 1; } while (o.measureText(text).width > w * .97 && fs > 8);
+      o.fillStyle = "#000"; o.textAlign = "center"; o.textBaseline = "middle"; o.fillText(text, w / 2, hh / 2 + hh * .04);
+      const d = o.getImageData(0, 0, w, hh).data, on = (x, y) => x >= 0 && y >= 0 && x < w && y < hh && d[(Math.floor(y) * w + Math.floor(x)) * 4 + 3] > 110, r = step * .46;
+      for (let y = step / 2; y < hh; y += step) for (let x = step / 2; x < w; x += step) {
+        if (![[0, 0], [-r * .6, 0], [r * .6, 0], [0, -r * .6], [0, r * .6]].some(([dx, dy]) => on(x + dx, y + dy))) continue;
+        const k = (Math.floor(x * 7 + y * 13) % 10 + 10) % 10, X = x0 + x, Y = y0 + y;
+        const g = c.createRadialGradient(X - r * .35, Y - r * .35, r * .1, X, Y, r);
+        const cols = k < 6 ? ["#fff7cf", "#f0c548", "#7a5a12"] : k < 9 ? ["#ffffff", "#cfd5db", "#5d646c"] : ["#f3ecd2", "#d6cba4", "#8c8264"];
+        g.addColorStop(0, cols[0]); g.addColorStop(.45, cols[1]); g.addColorStop(1, cols[2]); c.fillStyle = g; c.beginPath(); c.arc(X, Y, r, 0, 7); c.fill(); } };
+    const blank = () => felt("#2b2b2e", "#101012");
+    const show = it => { felt("#4b4b4e", "#2a2a2d");
+      rr(9, 8, 64, 20, 7); c.fillStyle = it.cur === "b" ? "#7c3aed" : "#d98e04"; c.fill();
+      c.fillStyle = "#fff"; c.font = `900 13px "Yu Gothic",Meiryo,sans-serif`; c.textAlign = "center"; c.textBaseline = "middle"; c.fillText(cname(it), 41, 18.5);
+      studs(it.cur === "b" ? `◆${it.cost}` : `${it.cost}pt`, 80, 5, BW - 92, 50, 4.4); studs(it.name, 8, 60, BW - 16, 88, 3.4); };
+    const sparkle = () => [[bx + 6, by + 4], [bx + BW - 6, by + 8], [bx + 10, by + BH - 6], [bx + BW - 10, by + BH - 4]].forEach(([x, y], i) => {
+      const e = add(`<div>✦</div>`, `left:${x}px;top:${y}px;translate:-50% -50%;font-size:${rnd(22, 34)}px;color:#fff3c0;text-shadow:0 0 10px #ffd86b;z-index:14`);
+      anim(e, [{ transform: "scale(.2)", opacity: 1 }, { transform: "scale(1.2) rotate(40deg)", opacity: 1, offset: .5 }, { transform: "scale(.3)", opacity: 0 }], 500, { delay: i * 60, fill: "both" }).then(() => e.remove()); });
+    const P = a => `perspective(900px) rotateX(${a}deg)`;
+    const flip = async draw => { anim(wrap, [{ transform: "none" }, { transform: "translateY(10px)", offset: .5 }, { transform: "none" }], 480);
+      await anim(bd, [{ transform: P(0), filter: "none" }, { transform: P(88), filter: "brightness(.5)" }], 200, { easing: "ease-in" }); draw();
+      await anim(bd, [{ transform: P(-88), filter: "brightness(.5)" }, { transform: P(10), filter: "none", offset: .7 }, { transform: P(0), filter: "none" }], 300); };
+    blank(); anim(h, [{ transform: "none" }, { transform: `translateY(-${up}px)` }], 350);
+    await anim(wrap, [{ transform: "translateY(170px)" }, { transform: "translateY(-8px)", offset: .8 }, { transform: "none" }], 420); await wait(700);
+    for (const it of MENU) { await flip(() => show(it)); sparkle(); await wait(2000); }
+    await flip(blank); await wait(400);
+    anim(wrap, [{ transform: "none" }, { transform: "translateY(170px)" }], 350, { easing: "ease-in" }); await anim(h, [{ transform: `translateY(-${up}px)` }, { transform: "none" }], 350); await wait(700);
+  },
+
   async m_queue() { // ⑨ いま発動中と順番待ち (キュー)
     const h = ham(N), q = [];
     const qp = add(`<div class=st><div style="display:inline-block;font-size:14px;line-height:20px;color:#fff;padding:0 10px;border-radius:7px;background:#0c0e18dd">演出キュー</div></div>`, `left:630px;top:84px;width:318px;z-index:60;opacity:0;transition:opacity .25s`);
