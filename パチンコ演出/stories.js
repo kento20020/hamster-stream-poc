@@ -61,14 +61,12 @@ Object.assign(scenes, {
   async cage(r) {
     const col = lotColor(r), missN = Math.random() < .7 ? 2 : 1;
     note(`錠前と気合いの色: ${CH_NAME[col]}`);
-    s.style.background = "radial-gradient(ellipse 70% 85% at 50% 22%,#4b3f70 0,#251c3e 55%,#110b20 100%)";
-    add(`<div></div>`, "left:0;top:418px;width:960px;height:122px;background:linear-gradient(#3d2c22,#1b110b)");
-    add(`<div></div>`, "left:250px;top:0;width:460px;height:440px;background:linear-gradient(#fff3c430,#fff3c400);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);z-index:1");
-    for (const [x, y, w, h] of [[24, 300, 150, 122], [60, 218, 110, 82], [790, 318, 140, 104]]) add(`<div></div>`, `left:${x}px;top:${y}px;width:${w}px;height:${h}px;background:linear-gradient(#5a4130,#3a281c);border:4px solid #22160e;z-index:1`);
+    add(`<div></div>`, "left:250px;top:0;width:460px;height:440px;background:linear-gradient(#fff3c430,#fff3c400);clip-path:polygon(40% 0,60% 0,100% 100%,0 100%);z-index:1"); // スポットライト
     reach(r);
     const g = gauge("脱出ゲージ");
     // 檻 (cg の中で重なり順を決める)
     const cg = add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:5");
+    add(`<div></div>`, "left:220px;top:400px;width:520px;height:60px;border-radius:50%;background:radial-gradient(closest-side,#000b,#0000);z-index:0", cg); // 檻の影
     const back = add(`<div></div>`, "left:276px;top:112px;width:408px;height:272px;background:linear-gradient(#1c1634,#2e2450 62%,#75593a 86%,#93714a);z-index:1", cg);
     const eyes = Array.from({ length: 34 }, () => add(`<div class=eyes><i></i><i></i></div>`, `left:${rnd(290, 660)}px;top:${rnd(160, 320)}px;z-index:2;animation-delay:-${rnd(0, 3).toFixed(2)}s;opacity:${rnd(.45, 1).toFixed(2)}`, cg)); // 暗がりに子どもがいっぱい
     const kids = [[314, 392, 80], [648, 392, 82], [364, 394, 70], [598, 394, 72], [338, 368, 62], [624, 366, 60]].map(([x, y, h], i) => {
@@ -207,10 +205,7 @@ Object.assign(scenes, {
   async wheel(r) {
     const col = lotColor(r), missN = Math.random() < .7 ? 2 : 1;
     note(`回し車の光: ${CH_NAME[col]}`);
-    s.style.background = "radial-gradient(circle at 30% 60%,#7a5134 0,#5a3a22 45%,#3a2414 100%)";
-    for (let i = 0; i < 46; i++) add(`<div></div>`, `left:${rnd(0, 950)}px;top:${rnd(0, 480)}px;width:${rnd(5, 12)}px;height:${rnd(3, 8)}px;border-radius:50%;background:#0002`);
-    add(`<svg viewBox="0 0 960 120"><path d="M0 30Q120 80 200 20T420 40M60 0Q90 60 40 110M380 0Q420 50 360 100" fill="none" stroke="#2a1a0c" stroke-width="6" opacity=".45"/></svg>`, "left:0;top:0;width:960px;height:120px");
-    add(`<div></div>`, "left:0;top:490px;width:960px;height:50px;background:linear-gradient(#4a3020,#2a1a10)");
+    add(`<div></div>`, "left:120px;top:472px;width:340px;height:44px;border-radius:50%;background:radial-gradient(closest-side,#000a,#0000);z-index:1"); // 回し車の影
     reach(r);
     // こども部屋 (右上) とシャッター
     const room = add(`<div></div>`, "left:610px;top:52px;width:310px;height:210px;background:radial-gradient(ellipse at 50% 100%,#3a2a1a,#0d0805 70%);border:10px solid #8a6a44;border-top:0;overflow:hidden;z-index:3;box-shadow:0 0 0 3px #2a1a0c");
@@ -312,8 +307,7 @@ Object.assign(scenes, {
     const top = r === "big" ? wpick([0, 0, 0, 10, 60, 30]) : r === "mid" ? wpick([0, 0, 0, 45, 55, 0]) : wpick([0, 0, 40, 45, 15, 0]);
     const SC = ["", "blue", "green", "red", "gold", "rainbow"], col = SC[top], missN = Math.random() < .7 ? 2 : 1;
     note(`STEP ${top} まで (${CH_NAME[col]})`);
-    s.style.background = "repeating-linear-gradient(90deg,#f6e6c8 0 40px,#efdcb8 40px 80px)";
-    add(`<div></div>`, "left:0;top:470px;width:960px;height:70px;background:linear-gradient(#b07a48,#7a4e28);border-top:4px solid #5a3818");
+    add(`<div></div>`, "left:210px;top:454px;width:340px;height:40px;border-radius:50%;background:radial-gradient(closest-side,#000a,#0000);z-index:1"); // トランポリンの影
     reach(r);
     // 棚と檻 (右上)
     add(`<div></div>`, "left:590px;top:118px;width:370px;height:22px;background:linear-gradient(#c08a52,#8a5a2c);border:3px solid #4a2c12;z-index:4");
@@ -410,11 +404,9 @@ Object.assign(scenes, {
 
   // ===== P00 結末だけ (タイミングの確認用) =====
   async only(r) {
-    s.style.background = "radial-gradient(circle at 50% 50%,#2a3a7a,#0e1236 70%)";
-    for (let i = 0; i < 40; i++) add(`<div class=blink>✦</div>`, `left:${rnd(0, 940)}px;top:${rnd(0, 520)}px;font-size:${rnd(10, 22)}px;color:#fff8;animation-delay:-${rnd(0, 3).toFixed(1)}s`);
     reach(r);
-    add(`<div>家族ラッシュ (結末だけ)</div>`, "left:480px;top:240px;translate:-50% -50%;font-size:30px;color:#cfe0ff");
-    add(`<div>今回: ${RES[r]}</div>`, "left:480px;top:290px;translate:-50% -50%;font-size:24px;color:#ffd23c");
+    add(`<div class=lab>家族ラッシュ (結末だけ)</div>`, "left:480px;top:240px;translate:-50% -50%;font-size:30px;color:#cfe0ff;z-index:2");
+    add(`<div class=lab>今回: ${RES[r]}</div>`, "left:480px;top:292px;translate:-50% -50%;font-size:24px;color:#ffd23c;z-index:2");
     await wait(1300);
     await ending(r, { missN: Math.random() < .7 ? 2 : 1 });
   },

@@ -1,5 +1,6 @@
 // パチンコ演出 PoC の土台。どの話も最後は ending(r) (家族ラッシュ → 図柄の結果) で終わる。
 // ページ: <script src="pachi.js"></script><script src="stories.js"></script><script>play("cage")</script>
+// 背景は配信演出と同じ OW のプレイ画面 (../配信ギミック/ow_bg.png)。話ごとの背景は塗らず、小道具だけを上に置く
 // URL: ?r=big|mid|miss で結果を固定 (なければ毎回抽選)。&debug=1 で計測を画面に出す。
 const HAM = "../通常ハム.png";
 const W = 960, H = 540, CX = W / 2, CY = H / 2, INK = "#331c16";
@@ -39,7 +40,7 @@ const STROKE = { gold: "#5a2a00", red: "#3a0000", blue: "#001a4a", green: "#0030
 
 document.head.insertAdjacentHTML("beforeend", `<style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden}
-#s{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;color:#fff;background:#0d0a1e;
+#s{position:absolute;left:0;top:0;width:960px;height:540px;overflow:hidden;transform-origin:0 0;color:#fff;background:#171d2c url(../配信ギミック/ow_bg.png) center/cover;
  font:900 28px "Yu Gothic","Hiragino Sans","Hiragino Kaku Gothic ProN",Meiryo,sans-serif;user-select:none;-webkit-user-select:none}
 #s *{position:absolute;box-sizing:border-box}
 #s .ham{transform-origin:50% 100%}
@@ -424,7 +425,8 @@ function rush(P, r, o = {}) {
       s.style.translate = ""; cv.remove(); dbg && dbg.remove();
       const main = st.runs.reduce((m, x) => x[1] - x[0] > (m ? m[1] - m[0] : 0) ? x : m, null);
       Object.assign(st, { dur: st.first === null ? 0 : st.last - st.first, hideA: main ? main[0] : null, hideB: main ? main[1] : null, kids: n, family: P.family });
-      cnt.innerHTML = r === "big" ? `子ども <b>${P.family}</b><small>匹</small> 全員脱出!!` : // 角を一瞬で通るハムは数えそこねることがあるので、大当たりは全員の数を出す r === "mid" ? `子ども <b>${n}</b><small> / ${P.family}匹 脱出</small>` : `<b>${n}</b><small>匹だけ… (${P.family}匹中)</small>`;
+      // 大当たりは全員の数を出す (画面の角を一瞬で通るハムは、数えそこねることがあるので)
+      cnt.innerHTML = r === "big" ? `子ども <b>${P.family}</b><small>匹</small> 全員脱出!!` : r === "mid" ? `子ども <b>${n}</b><small> / ${P.family}匹 脱出</small>` : `<b>${n}</b><small>匹だけ… (${P.family}匹中)</small>`;
       res(st);
     };
     requestAnimationFrame(frame);
@@ -434,8 +436,8 @@ function rush(P, r, o = {}) {
 // 大当たり・当たりの画面 (ラッシュでど真ん中が隠れた瞬間に、裏で入れかえる)
 function resultScene(r, d) {
   const B = r === "big", colr = n => n % 2 ? "#e0102a" : "#1060e0";
-  const root = add(`<div></div>`, `left:0;top:0;width:960px;height:540px;z-index:40;overflow:hidden;background:${B ? "radial-gradient(circle at 50% 45%,#fff7cf 0,#ffc433 28%,#e0580c 62%,#5c1000 100%)" : "radial-gradient(circle at 50% 45%,#effaff 0,#7fd0ff 28%,#1c64d0 62%,#081a5c 100%)"}`);
-  const rays = add(`<div></div>`, "left:-520px;top:-730px;width:2000px;height:2000px;border-radius:50%;background:repeating-conic-gradient(#ffffff38 0 6deg,#ffffff00 6deg 15deg)", root);
+  const root = add(`<div></div>`, `left:0;top:0;width:960px;height:540px;z-index:40;overflow:hidden;background:${B ? "radial-gradient(circle at 50% 45%,rgba(255,246,200,.9) 0,rgba(255,190,40,.62) 26%,rgba(214,80,10,.38) 58%,rgba(70,10,0,.62) 100%)" : "radial-gradient(circle at 50% 45%,rgba(236,248,255,.9) 0,rgba(110,200,255,.6) 26%,rgba(20,90,210,.36) 58%,rgba(4,16,60,.62) 100%)"}`); // 背景の OW が透けて見える
+  const rays = add(`<div></div>`, "left:-520px;top:-730px;width:2000px;height:2000px;border-radius:50%;background:repeating-conic-gradient(#ffffff2e 0 6deg,#ffffff00 6deg 15deg)", root);
   rays.animate([{ transform: "rotate(0)" }, { transform: "rotate(360deg)" }], { duration: B ? 8000 : 14000, iterations: Infinity });
   const reels = [0, 1, 2].map(i => add(`<div class=reel><b style="color:${colr(d)}">${d}</b></div>`, `left:${480 + (i - 1) * 172 - 76}px;top:150px`, root));
   const m = reels[1].firstChild; let n = 0; const iv = every(60, () => { const k = (n++ % 7) + 1; m.textContent = k; m.style.color = colr(k); });
@@ -465,8 +467,10 @@ async function ending(r, o = {}) {
   await loadSprites();
   const P = plan(r, o.missN ?? 2);
   await rumble(r);
-  let RS = null;
-  const res = await rush(P, r, { swap: () => { if (r !== "miss") { RS = resultScene(r, REACH ? REACH.d : 7); REACH && REACH.hide(); } } });
+  let RS = null; const story = [...s.children]; // ラッシュの前からある物 (話の小道具)
+  const res = await rush(P, r, { swap: () => { if (r !== "miss") {
+    story.forEach(e => anim(e, [{ opacity: 1 }, { opacity: 0 }], r === "big" ? 1 : 300).then(() => { e.style.visibility = "hidden"; })); // 図柄の画面は半透明なので、裏の小道具は消す
+    RS = resultScene(r, REACH ? REACH.d : 7); REACH && REACH.hide(); } } });
   tell({ phase: "rush", r, st: res });
   if (r === "miss") {
     REACH && REACH.stop(); o.onMiss && o.onMiss();
@@ -482,6 +486,7 @@ async function play(key) {
   for (;;) {
     TIMERS.forEach(clearInterval); TIMERS.clear(); s.getAnimations().forEach(a => a.cancel());
     s.innerHTML = ""; s.style.background = ""; s.style.translate = ""; REACH = null; pushHook = null;
+    add(`<div></div>`, "left:0;top:0;width:960px;height:540px;z-index:0;background:radial-gradient(ellipse 75% 70% at 50% 50%,rgba(10,6,24,.12) 0,rgba(10,6,24,.55) 100%)"); // 背景は OW のプレイ画面。周りを少し暗くして演出を見やすく
     const r = FIXED || ["big", "mid", "miss"][wpick([CFG.odds.big, CFG.odds.mid, CFG.odds.miss])];
     tell({ phase: "start", r, key });
     await scenes[key](r);
