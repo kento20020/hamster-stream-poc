@@ -205,11 +205,11 @@ const SK_V = [
 const SKF = `"Yusei Magic","Zen Maru Gothic",sans-serif`;
 
 Object.assign(scenes, {
-  async m_sketch() { // 胸の前のスケッチブックを上にめくって1つずつ紹介する
-    const { bd, BW, BH, raise, lower, bob } = chestBoard();
-    cue("見本: 2秒ごとにスケッチブックを上にめくる（本番は9秒ごと）");
+  async m_sketch() { // 胸の前のスケッチブックを上にめくって1つずつ紹介する。ずっと出したまま、7つ目のあとは1つ目に戻ってめくり続ける
+    const { bd, BW, BH, bob, place } = chestBoard(), HOLD = 2000; // 1ページを見せる時間 (見本は2秒、本番は9秒の想定)
+    place(); cue("見本: ずっと持ったまま、2秒ごとにめくる（本番は9秒ごと）");
     // マーカー風の字 (Yusei Magic) を、使う字だけまとめて読み込む。最初のページをめくる前に待つ (スタイルシートがまだなら空が返るので、2.5秒までくり返す)
-    const allTxt = "えんしゅつ いちらん おしまい" + MENU.map(it => it.name + cname(it) + skPrice(it)).join("");
+    const allTxt = MENU.map(it => it.name + cname(it) + skPrice(it)).join("");
     const fontP = (async () => { const t0 = performance.now(); while (performance.now() - t0 < 2500) { document.fonts.load(`600 12px "Klee One"`, "0123456789/").catch(() => {});
       const f = await Promise.race([document.fonts.load(`38px "Yusei Magic"`, allTxt).catch(() => []), wait(600)]); if (f && f.length) return; await wait(100); } })();
     const PX = 3, PY = 5, PW = BW - 6, PH = 117, HOLE = 8; // 画用紙の位置と大きさ (bd の中の座標)、リングの穴の高さ
@@ -238,16 +238,6 @@ Object.assign(scenes, {
     const txt = (e, t, css) => add(`<div class=st><span>${t}</span></div>`, "white-space:nowrap;" + css, e).firstChild;
     const shrink = (sp, max) => { const w = sp.offsetWidth; if (w > max) sp.parentNode.style.fontSize = parseFloat(getComputedStyle(sp.parentNode).fontSize) * max / w + "px"; };
 
-    const cover = () => { // 表紙: 厚紙にクリーム色の紙を貼り、マーカーで「えんしゅつ いちらん」
-      const e = page("#d6a86e", "#c99a60", 1, 3);
-      add(`<svg viewBox="0 0 ${PW} ${PH}" style="left:0;top:0;width:100%;height:100%;overflow:visible">
-        <g transform="rotate(-2 ${PW / 2} 58)"><path d="${skBox(30, 18, PW - 60, 80, 8, skRng(11))}" fill=#fff6df stroke=${INK} stroke-width=3.5 />
-        <rect x=${PW / 2 - 18} y=12 width=36 height=12 fill=#f2d98f fill-opacity=.9 stroke=${INK} stroke-width=1.6 transform="rotate(4 ${PW / 2} 18)" /></g></svg>`, "", e);
-      txt(e, "えんしゅつ", `left:0;top:30px;width:${PW}px;text-align:center;font:28px/32px ${SKF};color:#3e2317;transform:rotate(-2deg)`);
-      txt(e, "いちらん", `left:0;top:62px;width:${PW}px;text-align:center;font:28px/32px ${SKF};color:#3e2317;transform:rotate(-2deg)`);
-      add(skDood("star", PW - 46, 9, 17, 12), "", e); add(skDood("seed", 40, 70, 14, -25), "", e); add(skDood("heart", PW - 50, 74, 13, 8), "", e);
-      return e;
-    };
     const item = (it, i) => { // 演出1つぶん: 通貨の札、値段、演出名、落書き、ページ番号
       const c = skCol(it), [ul, doods, emph] = SK_V[i % SK_V.length], e = page("#fff5dc", "#f2e5c7", .93, 20 + i);
       const tag = txt(e, cname(it), `left:18px;top:13px;padding:0 7px;font:15px/19px ${SKF};color:${c.ink};background:${c.soft};border:2.5px solid ${c.ink};border-radius:9px 7px 10px 8px;transform:rotate(-5deg)`);
@@ -265,15 +255,8 @@ Object.assign(scenes, {
       txt(e, `${i + 1}/${MENU.length}`, `right:13px;bottom:7px;font:600 12px/14px "Klee One",${SKF};color:#7a5846`);
       return e;
     };
-    const end = () => { // 最後のページ
-      const e = page("#fff5dc", "#f2e5c7", .93, 40);
-      txt(e, "おしまい", `left:0;top:38px;width:${PW}px;text-align:center;font:30px/36px ${SKF};color:#3e2317;transform:rotate(-2deg)`);
-      add(skDood("heart", PW / 2 + 64, 44, 16, 12), "", e); add(skDood("spark", PW / 2 - 82, 36, 12, 0), "", e);
-      return e;
-    };
-
     // めくる: 今のページ (old) が穴の高さを軸に上へめくれて裏へ回り、下から次のページ (nx) が出る
-    let cur = cover();
+    let cur = page("#fff5dc", "#f2e5c7", .93, 40); // 字の読み込みを待つあいだの白紙
     const T = 720, PE = 620, o = { easing: "cubic-bezier(.32,.12,.42,1)" }, A = a => `perspective(${PE}px) rotateX(${a}deg)`;
     // めくれる紙の影: 持ち上がった紙の下の辺 (画面での高さ) のすぐ下まで、次のページを暗くする
     const shadeK = Array.from({ length: 11 }, (_, k) => { const r = k * 9 * Math.PI / 180, L = PH - HOLE, y = HOLE + L * Math.cos(r) * PE / (PE - L * Math.sin(r));
@@ -292,10 +275,8 @@ Object.assign(scenes, {
       old.remove(); clip.remove(); cur = nx;
     };
 
-    await raise(); await wait(650); await fontP;
-    for (let i = 0; i < MENU.length; i++) { await flip(item(MENU[i], i)); await wait(2000); }
-    await flip(end()); await wait(600);
-    await lower(); await wait(300);
+    await fontP;
+    for (let i = 0; ; i = (i + 1) % MENU.length) { await flip(item(MENU[i], i)); await wait(HOLD); } // 終わらない (play が繰り返さなくても出し続ける)
   },
 });
 }

@@ -46,8 +46,9 @@ const chestBoard = (opt = {}) => {
     `left:${d < 0 ? -22 : BW - 18}px;top:${BH / 2 - 28}px;width:40px;height:56px;z-index:5`, wrap));
   const raise = async () => { anim(h, [{ transform: "none" }, { transform: `translateY(-${up}px)` }], 350); await anim(wrap, [{ transform: "translateY(170px)" }, { transform: "translateY(-8px)", offset: .8 }, { transform: "none" }], 420); };
   const lower = async () => { anim(wrap, [{ transform: "none" }, { transform: "translateY(170px)" }], 350, { easing: "ease-in" }); await anim(h, [{ transform: `translateY(-${up}px)` }, { transform: "none" }], 350); };
+  const place = () => { h.style.transform = `translateY(-${up}px)`; }; // 持ち上げた状態ですぐ置く (ずっと出しておくとき)
   const bob = (px = 10, ms = 480) => anim(wrap, [{ transform: "none" }, { transform: `translateY(${px}px)`, offset: .5 }, { transform: "none" }], ms); // 持ち直す小さな上下
-  return { h, wrap, bd, paws, BW, BH, bx, by, raise, lower, bob };
+  return { h, wrap, bd, paws, BW, BH, bx, by, raise, lower, bob, place };
 };
 
 // ⑨ で「発動中」に流す仮の演出。本番は健が作った演出に置きかえる
