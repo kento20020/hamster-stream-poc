@@ -1,0 +1,5 @@
+# ローカル開発用の秘密情報。このファイルを .dev.vars にコピーして値を入れる（.dev.vars はコミットしない）
+DISCORD_BOT_TOKEN=
+DISCORD_CLIENT_SECRET=
+# 32文字以上のランダムな文字列（例: openssl rand -base64 48）
+COOKIE_SECRET=

@@ -27,3 +27,10 @@
 !配信ギミック/D*.html
 !配信ギミック/E*.html
 !配信ギミック/M*.html
+
+# Discord マルチAI MCPサーバー（Cloudflare Workers）。新しいリポジトリに移すまでの置き場所
+!discord-multi-ai-mcp/
+!discord-multi-ai-mcp/**
+discord-multi-ai-mcp/node_modules/
+discord-multi-ai-mcp/.wrangler/
+discord-multi-ai-mcp/.dev.vars

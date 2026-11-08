@@ -1,0 +1,61 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "discord-multi-ai-mcp",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-11-01",
+  // global_fetch_strictly_public: OAuthのClient ID Metadata Document（クライアントが自分で置くURL）を安全に取りに行くために必要
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "observability": { "enabled": true },
+
+  // ここの値は秘密ではない設定。秘密情報は `wrangler secret put` で入れる（README参照）
+  "vars": {
+    // このWorkerを公開するURL（末尾の / なし）。OAuthの発行者とMCPのURLの基準になる
+    "PUBLIC_URL": "http://localhost:8787",
+    // 対象のDiscordサーバー（ギルド）ID
+    "DISCORD_GUILD_ID": "",
+    // Discord Developer Portal の Application ID（= OAuth2 Client ID）
+    "DISCORD_CLIENT_ID": "",
+    // 「AI用」カテゴリのID。書き込み・スレッド作成・読み取りはこのカテゴリの中だけ
+    "AI_CATEGORY_ID": "",
+    // お題スレッドを立てるチャンネル（#ideas）とまとめを置くチャンネル（#summaries）。フォーラム推奨
+    "IDEAS_CHANNEL_ID": "",
+    "SUMMARIES_CHANNEL_ID": "",
+    // レベル1「AI-発言」とレベル2「AI-まとめ」のロールID
+    "ROLE_SPEAK_ID": "",
+    "ROLE_SUMMARY_ID": "",
+    // 接続URLごとのAIの種類。「パス:表示名」をカンマ区切り。/mcp/claude のように使う
+    "AI_KINDS": "claude:Claude,chatgpt:ChatGPT,gemini:Gemini,muse:Muse",
+    // 書き込みの回数制限（1分あたり）
+    "RATE_LIMIT_USER_PER_MINUTE": "6",
+    "RATE_LIMIT_CHANNEL_PER_MINUTE": "20",
+    // 書き込みログ（D1 messages_log）を残す日数
+    "LOG_RETENTION_DAYS": "90",
+    // ロール・閲覧権限のキャッシュ秒数（KVの最小は60秒）。ロールを外すとこの秒数以内に効く
+    "PERMISSION_CACHE_SECONDS": "180"
+  },
+
+  "kv_namespaces": [
+    // workers-oauth-provider がトークンやクライアント登録を保存する（自分では触らない）
+    { "binding": "OAUTH_KV", "id": "REPLACE_WITH_OAUTH_KV_ID" },
+    // アプリ用（role: / perm: / webhook: / user: / pat: / cache: のキーの頭で用途を分ける）
+    { "binding": "KV", "id": "REPLACE_WITH_APP_KV_ID" }
+  ],
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "discord-multi-ai-mcp",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+
+  // 投稿回数を数えるDurable Object（ユーザーごと・チャンネルごとに1つ）
+  "durable_objects": {
+    "bindings": [{ "name": "RATE_LIMITER", "class_name": "RateLimiter" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["RateLimiter"] }],
+
+  // 毎日1回、古い書き込みログと期限切れのOAuthデータを消す（UTC）
+  "triggers": { "crons": ["17 18 * * *"] }
+}
